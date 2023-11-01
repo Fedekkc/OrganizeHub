@@ -1,0 +1,27 @@
+{
+  "name": "organizehub",
+  "version": "1.0.0",
+  "description": "Aplicacion web para gestión de proyectos, estilo Notion.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/Fedekkc/OrganizeHub"
+  },
+  "author": "Federico Cacace - Santiago Perez Correa - Aylen Isasi - Marco Chaumont",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "express-handlebars": "^7.1.2",
+    "express-myconnection": "^1.0.4",
+    "express-session": "^1.17.3",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.6.2",
+    "nodemon": "^3.0.1"
+  }
+}
