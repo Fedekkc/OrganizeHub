@@ -1,12 +1,15 @@
 // user.js
 class User {
-    constructor(name, email, password) {
-      this.name = name;
+    constructor(username, password, email, phone, admin, registerDate, lastLogin) {
+      this.phone = phone;
+      this.admin = admin;
+      this.registerDate = registerDate;
+      this.lastLogin = lastLogin;
+      this.username = username;
       this.email = email;
       this.password = password;
     }
   
-    // Métodos de la clase User
     getName() {
       return this.name;
     }
@@ -19,7 +22,52 @@ class User {
       return this.password;
     }
   
-    // Otros métodos y lógica de la clase User
+    getPhone() {
+      return this.phone;
+    }
+
+    getAdmin() {
+        return this.admin;
+    }
+
+    getRegisterDate() {
+        return this.registerDate;
+    }
+
+    getLastLogin() {
+        return this.lastLogin;
+    }
+
+
+    setName(name) {
+      this.name = name;
+    }
+
+    setEmail(email) {
+      this.email = email;
+    }
+
+    setPassword(password) {
+      this.password = password;
+    }
+
+    setPhone(phone) {
+      this.phone = phone;
+    }
+
+    setAdmin(admin) {
+        this.admin = admin;
+    }
+
+    setRegisterDate(registerDate) {
+        this.registerDate = registerDate;
+    }
+
+    setLastLogin(lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+
   }
   
   module.exports = User;

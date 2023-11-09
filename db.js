@@ -8,7 +8,8 @@ const connectDB = async () => {
             password: 'root',
             database: 'schemaOH'
         });
-        console.log('MySQL connected...');
+        console.log('[+] Connected to MySQL successfully.');
+
         return connection;
     } catch (error) {
         console.error('Error connecting to MySQL', error);
@@ -16,20 +17,7 @@ const connectDB = async () => {
     }
 };
 
-const insertUser = async (user) => {
-    if (user) {
-        const connection = await connectDB();
-        const userValues = Object.values(user).map(value => (value !== undefined ? value : null));
-        const [rows] = await connection.execute('INSERT INTO users SET ?', [userValues]);
-        return rows;
-    } else {
-        // Manejo de errores o mensajes de registro de problemas
-        console.error('El objeto de usuario es indefinido o nulo.');
-        return null; // O cualquier otro manejo de errores que prefieras
-    }
-}
 
 
 
-module.exports = connectDB;
-module.exports = insertUser;
+module.exports = { connectDB };

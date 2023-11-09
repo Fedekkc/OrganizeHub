@@ -5,7 +5,7 @@ const myconn = require('express-myconnection');
 const mysql = require('mysql');
 const session = require('express-session');
 const bodyParser = require('body-parser');
-const connectDB = require('../db');
+const { connectDB } = require('../db');
 
 const loginRoutes = require('../routes/login');
 
@@ -32,11 +32,13 @@ connectDB();
 // Definir el puerto y comenzar el servidor
 app.set('port', process.env.PORT || 3000);
 app.listen(app.get('port'), () => {
-    console.log(`Servidor iniciado en el puerto ${app.get('port')}`);
+    console.log(`[+] Server succesfully started at port: ${app.get('port')}`);
 });
 
 // Rutas
 app.use('/', loginRoutes);
+
+
 
 // Ruta de inicio
 app.get('/', (req, res) => {
