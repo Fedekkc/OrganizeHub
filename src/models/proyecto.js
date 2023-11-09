@@ -1,6 +1,6 @@
 class Proyecto {
-  constructor(idProyecto, idCreador, nombreProyecto, cantidadMiembros, fechaCreacion, descripcionProyecto, fechaUltModificacion) {
-    this._idProyecto = idProyecto;
+  constructor(idCreador, nombreProyecto, cantidadMiembros, fechaCreacion, descripcionProyecto, fechaUltModificacion) {
+    
     this._idCreador = idCreador;
     this._nombreProyecto = nombreProyecto;
     this._cantidadMiembros = cantidadMiembros;
@@ -9,13 +9,7 @@ class Proyecto {
     this._fechaUltModificacion = fechaUltModificacion;
   }
 
-  get idProyecto() {
-    return this._idProyecto;
-  }
 
-  set idProyecto(value) {
-    this._idProyecto = value;
-  }
 
   get idCreador() {
     return this._idCreador;
