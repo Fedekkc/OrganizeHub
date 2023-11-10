@@ -47,6 +47,12 @@ class ProjectDao {
         const connection = await connectDB();
         await connection.execute('DELETE FROM Proyectos WHERE idProyecto = ?', [id]);
     }
+
+    static async getAllProjects() {
+        const connection = await connectDB();
+        const [rows] = await connection.execute('SELECT * FROM Proyectos');
+        return rows.map((project) => new Project(project.idProyecto, project.idCreador, project.nombreProyecto, project.cantidadMiembros, project.fechaCreacion, project.descripcionProyecto, project.fechaUltModificacion));
+    }
 }
 
 module.exports = ProjectDao;

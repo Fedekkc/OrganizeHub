@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 const { connectDB } = require('../db');
 
 const loginRoutes = require('../routes/login');
+const projectRoutes = require('../routes/projects');
 
 const app = express();
 
@@ -36,9 +37,8 @@ app.listen(app.get('port'), () => {
 });
 
 // Rutas
+app.use('/', projectRoutes);
 app.use('/', loginRoutes);
-
-
 
 // Ruta de inicio
 app.get('/', (req, res) => {

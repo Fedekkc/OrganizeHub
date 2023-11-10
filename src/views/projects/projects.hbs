@@ -3,25 +3,31 @@
 <!-- Include Bootstrap CSS -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
+
+<form method="POST" action="/projects/newProject">
+  <button type="submit" class="btn btn-primary">New Project</button>
+</form>
+
 <!-- Create a container for the grid -->
 <div class="container">
 
   <!-- Create a row for each project -->
   <div class="row">
 
-    <!-- Repeat this column for each project -->
+    
+
     {{#each projects}}
     <div class="col-md-4">
       <div class="card mb-4 shadow-sm">
         <div class="card-body">
-          <h5 class="card-title">{{this.title}}</h5>
-          <p class="card-text">{{this.description}}</p>
+          <h5 class="card-title">{{project.name}}</h5>
+          <p class="card-text">{{project.description}}</p>
           <div class="d-flex justify-content-between align-items-center">
             <div class="btn-group">
               <a href="#" class="btn btn-sm btn-outline-secondary">View</a>
               <a href="#" class="btn btn-sm btn-outline-secondary">Edit</a>
             </div>
-            <small class="text-muted">{{this.updatedAt}}</small>
+            <small class="text-muted">{{project.last}}</small>
           </div>
         </div>
       </div>
@@ -32,7 +38,7 @@
 
 </div>
 
-<!-- Include Bootstrap JS -->
+
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
   integrity="sha384-9QJ6nY5Qz8Y5tZ5z9vJzZz9zJZz9zJZz9zJZz9zJZz9zJZz9zJZz9zJZz9zJZz9z"
