@@ -32,6 +32,12 @@ class UserDAO {
         }
     };
 
+    static async getUserProjects(id) {
+        const connection = await connectDB();
+        const [rows] = await connection.execute('SELECT idProyecto FROM Usuario_Proyecto WHERE idUsuario = ?', [id]);
+        return rows;
+    }
+
     static async findByID(id) {
         const connection = await connectDB();
         const [rows] = await connection.execute('SELECT * FROM Usuarios WHERE idUsuario = ?', [id]);
@@ -41,8 +47,13 @@ class UserDAO {
 
     static async findByUsername(username) {
         const connection = await connectDB();
-        const [rows] = await connection.execute('SELECT * FROM Usuarios WHERE username = ?', [username]);
+        var query = "SELECT ID FROM Usuarios WHERE username = ?";
+        var [rows] = await connection.execute(query, [username]);
         const data = rows[0];
+        //Vamos a hacer una query con un inner join para obtener el usuario junto con sus proyectos
+        query = "SELECT * FROM Usuarios INNER JOIN"
+        [rows] = await connection.execute('SELECT * FROM Usuarios WHERE username = ?', [username]);
+        data = rows[0];
         return new User(data.username, data.password, data.email, data.phone, data.admin, data.registerDate, data.lastLogin);
     }
 

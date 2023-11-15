@@ -1,5 +1,6 @@
 const Proyecto = require('../src/models/proyecto');
 const ProjectDao = require('../src/DAOs/daoProyecto');
+const { getUserID } = require('../src/DAOs/daoUsuario');
 
 // Function to render the projects view
 
@@ -11,6 +12,14 @@ function newProjectView(req, res) {
     res.render('projects/newProject');
 }
 
+// ...
+
+function newProjectRedirect(req, res) {
+    res.render('projects/newProject');
+}
+
+// ...
+
 
 // Function to render the project view
 function showProjects() {
@@ -21,14 +30,23 @@ function showProjects() {
     
 }
 
+// Function to create a new project
+
 async function newProject(req, res) {  
     const {projectName, projectDescription} = req.body;
-    const user = req.user; 
+    //Obtenemos el usuario actual que almacenamos con el middleware de sesiones
+    //con el codigo: res.locals.user = req.session.user;
+    const user = res.locals.user;
+    
+    
     //obtener el id del usuario actual con el DAO de usuarios
     
-    const userID = await getUserID(user.username);
+    console.log("[+] User: " + user);
+    const userID = await getUserID(user);
+    
     
     const project = new Proyecto(userID, projectName, 1, new Date(), projectDescription, new Date());
+    console.log("[+] Project: " + project);
     await ProjectDao.createProject(project);
     res.redirect('/projects');
 
@@ -42,5 +60,6 @@ module.exports = {
     projects,
     newProject,
     newProjectView,
+    newProjectRedirect
 }
 

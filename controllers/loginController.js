@@ -35,10 +35,10 @@ async function loginUser(req, res) {
     console.log(username);
     try {
         const user = await findByUsername(username);
-        console.log("[/] Password: " + user.password);
+        console.log("[●] Password: " + user.password);
         if (bcrypt.compareSync(password, user.password)) { 
             const userid = await getUserID(user.username); // Espera la resolución de la promesa
-            console.log("[/] User ID: " + userid);
+            console.log("[●] User ID: " + userid);
             await updateLastLogin(userid); // Espera la resolución de la promesa
             req.session.user = user;
             res.redirect('/projects');

@@ -1,15 +1,12 @@
-// Importar dependencias
 const express = require('express');
 const { engine } = require('express-handlebars');
 const myconn = require('express-myconnection');
 const mysql = require('mysql');
-const session = require('express-session');
 const bodyParser = require('body-parser');
 const { connectDB } = require('../db');
-
 const loginRoutes = require('../routes/login');
 const projectRoutes = require('../routes/projects');
-
+const session = require('express-session');
 const app = express();
 
 // Configuración del motor de vistas
@@ -27,6 +24,10 @@ app.use(session({
     saveUninitialized: true,
 }));
 
+
+
+
+
 // Conexión a la base de datos
 connectDB();
 
@@ -37,8 +38,9 @@ app.listen(app.get('port'), () => {
 });
 
 // Rutas
-app.use('/', projectRoutes);
 app.use('/', loginRoutes);
+app.use('/', projectRoutes);
+
 
 // Ruta de inicio
 app.get('/', (req, res) => {

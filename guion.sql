@@ -56,7 +56,17 @@ CREATE TABLE IF NOT EXISTS Usuario_Grupo (
     idUsuario INT NOT NULL,
     fechaIngreso date not null,
     foreign key(idGrupo) REFERENCES GrupoDeTrabajo(idGrupo));
+
+CREATE TABLE IF NOT EXISTS Usuario_Proyecto (
+idProyecto INT NOT NULL PRIMARY KEY,
+idUsuario INT NOT NULL,
+fechaIngreso DATE NOT NULL,
+rol VARCHAR(30),
+foreign key(idProyecto) REFERENCES Proyectos(idProyecto));
+
+
+
+SELECT * FROM Usuarios INNER JOIN Proyectos ON Usuarios.idUsuario = Proyectos.idProyecto;
     
-SELECT * FROM Usuarios;
-    
+
 
