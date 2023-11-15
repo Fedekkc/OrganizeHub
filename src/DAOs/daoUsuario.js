@@ -51,7 +51,7 @@ class UserDAO {
         var [rows] = await connection.execute(query, [username]);
         const data = rows[0];
         //Vamos a hacer una query con un inner join para obtener el usuario junto con sus proyectos
-        query = "SELECT * FROM Usuarios INNER JOIN"
+        query = "SELECT * FROM Usuarios INNER JOIN Proyectos ON Usuarios.idUsuario = Proyectos.idUsuario WHERE idUsuario = ?";
         [rows] = await connection.execute('SELECT * FROM Usuarios WHERE username = ?', [username]);
         data = rows[0];
         return new User(data.username, data.password, data.email, data.phone, data.admin, data.registerDate, data.lastLogin);
