@@ -16,10 +16,6 @@ function signup(req, res) {
 function saveUser(req, res) {
 
     const registerDate = new Date();
-
-
-    //Establecemos la lastLogin en el momento de la creación del usuario
-
     const lastLogin = new Date();
     const admin = false;
     
@@ -32,17 +28,19 @@ function saveUser(req, res) {
 
 async function loginUser(req, res) {
     const { username, password } = req.body;
-    console.log(username);
+    
     try {
         const user = await findByUsername(username);
-        console.log("[●] Password: " + user.password);
         if (bcrypt.compareSync(password, user.password)) { 
             const userid = await getUserID(user.username); // Espera la resolución de la promesa
-            console.log("[●] User ID: " + userid);
             await updateLastLogin(userid); // Espera la resolución de la promesa
             req.session.user = user;
+            
+            req.session.projects = user.projects; // Store projects in the session
+            
+            
+            console.log("[+] loginUser(): User logged in");
             res.redirect('/projects');
-            console.log("[+] User logged in");
         } else {
             res.render('login', { error: '[-] Incorrect password' });
             console.log("[-] Incorrect password");

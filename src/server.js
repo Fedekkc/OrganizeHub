@@ -7,22 +7,30 @@ const { connectDB } = require('../db');
 const loginRoutes = require('../routes/login');
 const projectRoutes = require('../routes/projects');
 const session = require('express-session');
+const path = require('path');
+
+
+
+
 const app = express();
 
 // Configuración del motor de vistas
 app.engine('hbs', engine({ extname: '.hbs', defaultLayout: 'main' }));
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
-console.log(app.get('views'));
+app.use(express.static(path.join(__dirname, 'src/styles')));
+
 
 // Configuración de bodyParser y session
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
 app.use(session({
     secret: 'secret',
     resave: true,
     saveUninitialized: true,
 }));
+
 
 
 
@@ -37,12 +45,14 @@ app.listen(app.get('port'), () => {
     console.log(`[+] Server succesfully started at port: ${app.get('port')}`);
 });
 
-// Rutas
-app.use('/', loginRoutes);
-app.use('/', projectRoutes);
-
 
 // Ruta de inicio
 app.get('/', (req, res) => {
     res.render('home');
 });
+// Rutas
+app.use('/', loginRoutes);
+app.use('/', projectRoutes);
+
+
+

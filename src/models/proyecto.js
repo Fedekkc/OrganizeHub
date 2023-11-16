@@ -59,3 +59,5 @@ class Proyecto {
     this._fechaUltModificacion = value;
   }
 }
+
+module.exports = Proyecto;

@@ -1,6 +1,6 @@
 // user.js
 class User {
-    constructor(username, password, email, phone, admin, registerDate, lastLogin) {
+    constructor(username, password, email, phone, admin, registerDate, lastLogin, projects) {
       this.phone = phone;
       this.admin = admin;
       this.registerDate = registerDate;
@@ -8,6 +8,7 @@ class User {
       this.username = username;
       this.email = email;
       this.password = password;
+      this.projects = projects || [];
     }
   
     getName() {

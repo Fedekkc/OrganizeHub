@@ -47,21 +47,67 @@ class UserDAO {
 
     static async findByUsername(username) {
         const connection = await connectDB();
-        var query = "SELECT ID FROM Usuarios WHERE username = ?";
+        var query = "SELECT * FROM Usuarios WHERE username = ?";
         var [rows] = await connection.execute(query, [username]);
-        const data = rows[0];
-        //Vamos a hacer una query con un inner join para obtener el usuario junto con sus proyectos
-        query = "SELECT * FROM Usuarios INNER JOIN Proyectos ON Usuarios.idUsuario = Proyectos.idUsuario WHERE idUsuario = ?";
-        [rows] = await connection.execute('SELECT * FROM Usuarios WHERE username = ?', [username]);
-        data = rows[0];
-        return new User(data.username, data.password, data.email, data.phone, data.admin, data.registerDate, data.lastLogin);
+        let data = rows[0];
+        let user = {
+            idUsuario: data.idUsuario,
+            username: data.username,
+            password: data.password,
+            email: data.email,
+            phone: data.phone,
+            admin: data.admin,
+            registerDate: data.registerDate,
+            lastLogin: data.lastLogin
+        }
+        
+        //Obtenemos los proyectos a los que pertenece el usuario        
+        query = "SELECT * FROM Usuarios INNER JOIN Usuario_Proyecto ON Usuarios.idUsuario = Usuario_Proyecto.idUsuario WHERE Usuarios.idUsuario = ?";
+        try {
+            [rows] = await connection.execute(query, [data.idUsuario]);
+            data = rows[0];
+            let projects = [];
+            for (let i = 0; i < rows.length; i++) {
+                projects.push(rows[i].idProyecto);
+            }
+            user.projects = projects;
+            //Creamos el objeto usuario
+            console.log("user info: " + user.username + " " + user.password + " " + user.email + " " + user.phone + " " + user.admin + " " + user.registerDate + " " + user.lastLogin + " " + user.projects);
+            return new User(user.username, user.password, user.email, user.phone, user.admin, user.registerDate, user.lastLogin, user.projects);
+
+        }
+        catch (error) {
+            console.error('Error al obtener los proyectos del usuario', error);
+            return null;
+        }
+        
+        
+
     }
 
-    static async update(user) {
+    static async update(id, user) {
         const connection = await connectDB();
-        await connection.execute('UPDATE Usuarios SET username = ?, password = ?, email = ?, phone = ?, admin = ?, registerDate = ?, lastLogin = ? WHERE idUsuario = ?', 
-        [user.username, user.password, user.email, user.phone, user.admin, user.registerDate, user.lastLogin, user.getID()]);
+        
+        // Check if registerDate is a Date object
+        if (!(user.registerDate instanceof Date)) {
+            user.registerDate = new Date(user.registerDate);
+        }
+        if (!(user.lastLogin instanceof Date)) {
+            user.lastLogin = new Date(user.lastLogin);
+        }
+        
+        // Format the date using MySQL's format function
+        const formattedDate = user.registerDate.toISOString().slice(0, 19).replace('T', ' ');
+        
+        // Format the lastLogin date using MySQL's format function
+        const formattedLastLogin = user.lastLogin.toISOString().slice(0, 19).replace('T', ' ');
+    
+        await connection.execute(
+            'UPDATE Usuarios SET username = ?, password = ?, email = ?, phone = ?, admin = ?, registerDate = ?, lastLogin = ? WHERE idUsuario = ?', 
+            [user.username, user.password, user.email, user.phone, user.admin, formattedDate, formattedLastLogin, id]
+        );
     }
+    
     
     static async getUserID(username) {
         const connection = await connectDB();
