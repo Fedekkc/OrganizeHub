@@ -27,9 +27,7 @@
                 {{#each members}}
                 <li>
                     {{this}}
-                    {{#in user.rol ['project-manager', 'project-owner']}}
                     <button type="button" class="btn btn-danger" onclick="deleteMember('{{this}}')">Eliminar</button>
-                    {{/in}}
                 </li>
                 {{/each}}
             </ul>
