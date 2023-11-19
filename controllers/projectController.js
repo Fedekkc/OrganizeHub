@@ -126,6 +126,35 @@ async function addMember(req, res) {
     res.redirect('/projects/' + projectID);
 }
 
+async function deleteMember(req, res) {
+    const { username, projectID } = req.body;
+    const userID = await userDao.getUserID(username);
+
+    // Comprobamos que el usuario exista
+    if (userID == null) {
+        console.log("[-] User does not exist");
+        res.redirect('/projects/' + projectID);
+        return;
+    }
+
+    // Comprobamos que el usuario este en el proyecto
+    const projects = await userDao.getUserProjects(userID);
+    let found = false;
+    for (let i = 0; i < projects.length; i++) {
+        if (projects[i].idProyecto == projectID) {
+            found = true;
+        }
+    }
+    if (!found) {
+        console.log("[-] User not in project");
+        res.redirect('/projects/' + projectID);
+        return;
+    }
+
+    console.log("username: " + username + " userID: " + userID + " projectID: " + projectID);
+    await ProjectDao.deleteMember(projectID,userID);
+    res.redirect('/projects/' + projectID);
+}
 
 
 module.exports = {
@@ -135,6 +164,7 @@ module.exports = {
     newProjectView,
     newProjectRedirect,
     getProject,
-    addMember
+    addMember,
+    deleteMember
 }
 

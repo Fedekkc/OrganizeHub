@@ -25,7 +25,10 @@
             <button class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal">Add Member</button>
             <ul>
                 {{#each members}}
-                <li>{{this}}</li>
+                <li>
+                    {{this}}
+                    <button type="button" class="btn btn-danger" onclick="deleteMember('{{this}}')">Eliminar</button>
+                </li>
                 {{/each}}
             </ul>
             <!-- Add Member Modal -->
@@ -135,7 +138,28 @@
 </div>
 
 <script>
-    // Al principio del script
+function deleteMember(username) {
+    var projectID = "{{id}}";
+
+    // Envía una solicitud AJAX al servidor
+    $.ajax({
+        url: '/deleteMember',
+        type: 'POST',
+        data: { username: username, projectID: projectID },
+        success: function(response) {
+            // Si la solicitud es exitosa, redirige al usuario
+            window.location.href = '/projects/' + projectID;
+        },
+        error: function(error) {
+            // Si la solicitud falla, muestra un mensaje de error
+            console.log(error);
+            alert('Error deleting member');
+        }
+    });
+}
+
+
+
 var selectedUsers = [];
 
 function addSelectedUser(username) {
@@ -221,29 +245,27 @@ function autocompleteMembers(input, list) {
 </script>
 
 <script>
-   function addMember() {
-        // Obtén el valor de entrada del usuario
-        var username = document.getElementById("userInput").value;
-        var projectID = "{{id}}";
+function addMember() {
+    // Obtén el valor de entrada del usuario
+    var username = document.getElementById("userInput").value;
+    var projectID = "{{id}}";
 
-        // Envía una solicitud AJAX al servidor
-        $.ajax({
-            url: '/addMember', // URL del endpoint en tu servidor
-            type: 'POST', // Método de la solicitud
-            data: { username: username, projectID: projectID }, // Datos que se envían al servidor
-            success: function(response) {
-                // Esta función se ejecuta si la solicitud es exitosa
-                console.log(response);
-                $('#addMemberModal').modal('hide');
-            },
-            error: function(error) {
-                // Esta función se ejecuta si la solicitud falla
-                console.log(error);
-                $('#addMemberModal').modal('hide');
-
-            }
-        });
-
+    // Envía una solicitud AJAX al servidor
+   $.ajax({
+    url: '/addMember',
+    type: 'POST',
+    data: { username: username, projectID: projectID },
+    success: function(response) {
+        // Si la solicitud es exitosa, oculta el modal y redirige al usuario
+        $('#addMemberModal').modal('hide');
+        window.location.href = '/projects/' + projectID;
+    },
+    error: function(error) {
+        // Si la solicitud falla, muestra un mensaje de error y oculta el modal
+        console.log(error);
+        alert('Error adding member');
         $('#addMemberModal').modal('hide');
     }
+});
+}
 </script>

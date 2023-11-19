@@ -109,6 +109,11 @@ class ProjectDao {
         return members;
     }
 
+    static async deleteMember(idProyecto, idUsuario) {
+        const connection = await connectDB();
+        await connection.execute('DELETE FROM Usuario_Proyecto WHERE idProyecto = ? AND idUsuario = ?', [idProyecto, idUsuario]);
+    }
+
     static async getProjectTasks(id) {
         const connection = await connectDB();
         const [rows] = await connection.execute('SELECT idTarea FROM Tareas WHERE idProyecto = ?', [id]);
