@@ -5,10 +5,17 @@ const bcrypt = require('bcrypt');
 
 
 function login(req, res) {
+    if (req.session.userLoggedIn) {
+        res.redirect('/');
+    }
     res.render('login/index');
 }
 
 function signup(req, res) {
+    //Comprobar si el usuario está logueado
+    if (req.session.userLoggedIn) {
+        res.redirect('/');
+    }
     res.render('login/signup');
 }
 
@@ -25,6 +32,8 @@ function saveUser(req, res) {
     createUser(user);
 
     req.session.userLoggedIn = true;
+    req.session.user = user;
+    req.session.projects = user.projects; // Store projects in the session
 
     res.redirect('/');
     

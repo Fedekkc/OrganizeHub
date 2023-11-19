@@ -101,7 +101,7 @@ async function getProject(req, res) {
 }
 
 async function addMember(req, res) {
-    const { username, projectID } = req.body;
+    const { username, projectID, rol } = req.body;
     const userID = await userDao.getUserID(username);
 
     // Comprobamos que el usuario exista
@@ -122,7 +122,7 @@ async function addMember(req, res) {
     }
 
     console.log("username: " + username + " userID: " + userID + " projectID: " + projectID);
-    await ProjectDao.addMember(projectID,userID);
+    await ProjectDao.addMember(projectID,userID,rol);
     res.redirect('/projects/' + projectID);
 }
 

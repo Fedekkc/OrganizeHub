@@ -9,4 +9,9 @@ router.get('/signup', loginController.signup);
 router.post('/signup', loginController.saveUser);
 router.post('/login', loginController.loginUser);
 
+router.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.redirect('/');
+});
+
 module.exports = router;

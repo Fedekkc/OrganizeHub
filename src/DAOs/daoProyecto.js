@@ -41,10 +41,10 @@ class ProjectDao {
         }
     }
     
-    static async addMember(idProyecto, idUsuario) {
+    static async addMember(idProyecto, idUsuario, rol) {
         const connection = await connectDB();
         const query = 'INSERT INTO Usuario_Proyecto (idUsuario, idProyecto, fechaIngreso, rol) VALUES (?, ?,?,?)';
-        const valores = [idUsuario, idProyecto, new Date(), 'Miembro'];
+        const valores = [idUsuario, idProyecto, new Date(), rol];
         const result = await connection.execute(query, valores);
         console.log('[+] Member successfully added.');
         return result;
