@@ -31,6 +31,11 @@ app.use(session({
     saveUninitialized: true,
 }));
 
+app.use((req, res, next) => {
+    res.locals.userLoggedIn = req.session.userLoggedIn;
+    next();
+});
+
 
 
 

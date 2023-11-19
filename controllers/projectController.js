@@ -96,11 +96,35 @@ async function getProject(req, res) {
     const tasks = await ProjectDao.getProjectTasks(id);
     const teams = await ProjectDao.getProyectTeams(id);
 
-    res.render('projects/project', { project, members, tasks, teams });
-    
+    res.render('projects/project', { project, members, tasks, teams, id });
 
 }
 
+async function addMember(req, res) {
+    const { username, projectID } = req.body;
+    const userID = await userDao.getUserID(username);
+
+    // Comprobamos que el usuario exista
+    if (userID == null) {
+        console.log("[-] User does not exist");
+        res.redirect('/projects/' + projectID);
+        return;
+    }
+
+    // Comprobamos que el usuario no este en el proyecto
+    const projects = await userDao.getUserProjects(userID);
+    for (let i = 0; i < projects.length; i++) {
+        if (projects[i].idProyecto == projectID) {
+            console.log("[-] User already in project");
+            res.redirect('/projects/' + projectID);
+            return;
+        }
+    }
+
+    console.log("username: " + username + " userID: " + userID + " projectID: " + projectID);
+    await ProjectDao.addMember(projectID,userID);
+    res.redirect('/projects/' + projectID);
+}
 
 
 
@@ -110,6 +134,7 @@ module.exports = {
     newProject,
     newProjectView,
     newProjectRedirect,
-    getProject
+    getProject,
+    addMember
 }
 

@@ -112,8 +112,11 @@ class UserDAO {
     static async getUserID(username) {
         const connection = await connectDB();
         const [rows] = await connection.execute('SELECT idUsuario FROM Usuarios WHERE username = ?', [username]);
-        const data = rows[0];
-        return data.idUsuario;
+        if (rows.length > 0) {
+            return rows[0].idUsuario;
+        } else {
+            return null;
+        }
     }
     
 

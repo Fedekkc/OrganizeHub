@@ -1,4 +1,13 @@
 <!-- FILEPATH: /f:/Fede/Escuela/OrganizeHub/src/views/projects/project.hbs -->
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
+        integrity="sha384-9QJ6nY5Qz8Y5tZ5z9vJzZz9zJZz9zJZz9zJZz9zJZz9zJZz9zJZz9zJZz9zJZz9z"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <div class="container">
     <div class="row">
@@ -10,16 +19,16 @@
         <div class="col-md-6">
             <h2>{{project._descripcionProyecto}}</h2>
             {{#if project._fechaUltModificacion}}
-                <p>Last modified: {{project._fechaUltModificacion}}</p>
+            <p>Last modified: {{project._fechaUltModificacion}}</p>
             {{/if}}
             <h2>Members</h2>
             <button class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal">Add Member</button>
             <ul>
                 {{#each members}}
-                    <li>{{this}}</li>
+                <li>{{this}}</li>
                 {{/each}}
             </ul>
-                        <!-- Add Member Modal -->
+            <!-- Add Member Modal -->
             <div class="modal" id="addMemberModal">
                 <!-- Modal content goes here -->
                 <!-- Example: -->
@@ -31,22 +40,33 @@
                         </div>
                         <div class="modal-body">
                             <!-- Modal body content goes here -->
+                            <form>
+                                <div class="form-group">
+                                    <label for="userInput">Usuario:</label>
+                                    <input type="text" class="form-control" id="userInput"
+                                        placeholder="Nombre de usuario" oninput="autocompleteMembers('userInput','autocompleteList')">
+                                    <div id="autocompleteList"></div>
+                                </div>
+                            </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button type="button" class="btn btn-primary" onclick="addMember()">Save changes</button>
                         </div>
                     </div>
                 </div>
             </div>
+
+
+
             <h2>Teams</h2>
             <button class="btn btn-primary" data-toggle="modal" data-target="#addTeamModal">Add Team</button>
             <ul>
                 {{#each teams}}
-                    <li>{{this}}</li>
+                <li>{{this}}</li>
                 {{/each}}
             </ul>
-                <div class="modal" id="addTeamModal">
+            <div class="modal" id="addTeamModal">
                 <!-- Modal content goes here -->
                 <!-- Example: -->
                 <div class="modal-dialog">
@@ -55,8 +75,25 @@
                             <h5 class="modal-title">Add Member</h5>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
+                        
                         <div class="modal-body">
-                            <!-- Modal body content goes here -->
+                            <form>
+                                <div class="form-group">
+                                    <label for="usersInput">Usuarios:</label>
+                                    <input type="text" class="form-control" id="usersInput" placeholder="Nombres de usuarios" oninput="autocompleteMembers('usersInput', 'autocompleteList2')">
+                                    <div id="autocompleteList2"></div>
+                                </div>
+                                <div id="selectedUsersContainer"></div> <!-- Contenedor para mostrar usuarios seleccionados -->
+                                <div class="form-group">
+                                    <label for="teamNameInput">Nombre del equipo:</label>
+                                    <input type="text" class="form-control" id="teamNameInput" placeholder="Nombre del equipo">
+
+                                    <label for="teamDescriptionInput">Descripción del equipo:</label>
+                                    <input type="text" class="form-control" id="teamDescriptionInput" placeholder="Descripción del equipo">
+                                </div>
+                            </form>
+                        </div>
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -71,10 +108,10 @@
             <button class="btn btn-primary" data-toggle="modal" data-target="#addTaskModal">Add Task</button>
             <ul>
                 {{#each tasks}}
-                    <li>{{this}}</li>
+                <li>{{this}}</li>
                 {{/each}}
             </ul>
-                        <div class="modal" id="addTaskModal">
+            <div class="modal" id="addTaskModal">
                 <!-- Modal content goes here -->
                 <!-- Example: -->
                 <div class="modal-dialog">
@@ -97,9 +134,116 @@
     </div>
 </div>
 
+<script>
+    // Al principio del script
+var selectedUsers = [];
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
-    integrity="sha384-9QJ6nY5Qz8Y5tZ5z9vJzZz9zJZz9zJZz9zJZz9zJZz9zJZz9zJZz9zJZz9zJZz9z"
-    crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+function addSelectedUser(username) {
+    selectedUsers.push(username);
+    updateSelectedUsers();
+}
+
+function removeSelectedUser(index) {
+    selectedUsers.splice(index, 1);
+    updateSelectedUsers();
+}
+
+function updateSelectedUsers() {
+    var container = document.getElementById("selectedUsersContainer");
+    container.innerHTML = ""; // Limpiar el contenedor
+
+    selectedUsers.forEach(function (user, index) {
+        var userDiv = document.createElement("div");
+        userDiv.innerHTML = '<span>' + user + '</span><button type="button" onclick="removeSelectedUser(' + index + ')" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+        container.appendChild(userDiv);
+    });
+}
+
+// Modificar la función autocompleteMembers
+function autocompleteMembers(input, list) {
+    var inputElement = document.getElementById(input);
+    var autocompleteList = document.getElementById(list);
+
+    if (inputElement) {
+        var inputText = inputElement.value.trim();
+
+        autocompleteList.innerHTML = "";
+
+        if (inputText !== "") {
+            var matchingMembers = getMatchingMembers(inputText);
+
+            matchingMembers.forEach(function (member) {
+                var suggestion = document.createElement("div");
+                suggestion.innerHTML = "<strong>" + member + "</strong>";
+                suggestion.addEventListener("click", function () {
+                    addSelectedUser(member);
+                    inputElement.value = "";
+                    autocompleteList.innerHTML = "";
+                });
+                autocompleteList.appendChild(suggestion);
+            });
+        }
+    }
+}
+
+// ... Resto del script ...
+
+
+
+    autocompleteList.innerHTML = "";
+
+    // Filtrar y mostrar las sugerencias que coinciden con el texto ingresado
+    if (inputText !== "") {
+        var matchingMembers = getMatchingMembers(inputText); // Implementa esta función según tu lógica
+
+        matchingMembers.forEach(function (member) {
+            var suggestion = document.createElement("div");
+            suggestion.innerHTML = "<strong>" + member + "</strong>";
+            suggestion.addEventListener("click", function () {
+                // Al hacer clic en una sugerencia, llenar el campo de entrada con esa sugerencia
+                input.value = member;
+                autocompleteList.innerHTML = "";
+            });
+            autocompleteList.appendChild(suggestion);
+        });
+    }
+
+
+    function getMatchingMembers(text) {
+        // Obtenemos los miembros del proyecto enviados desde el servidor como "members"
+        var projectMembers = [{{#each members}}"{{this}}",{{/each}}];
+        console.log(projectMembers)
+        var matchingMembers = projectMembers.filter(function (member) {
+            return member.toLowerCase().includes(text.toLowerCase());
+        });
+        return matchingMembers;
+    }
+</script>
+
+<script>
+   function addMember() {
+        // Obtén el valor de entrada del usuario
+        var username = document.getElementById("userInput").value;
+        var projectID = "{{id}}";
+
+        // Envía una solicitud AJAX al servidor
+        $.ajax({
+            url: '/addMember', // URL del endpoint en tu servidor
+            type: 'POST', // Método de la solicitud
+            data: { username: username, projectID: projectID }, // Datos que se envían al servidor
+            success: function(response) {
+                // Esta función se ejecuta si la solicitud es exitosa
+                console.log(response);
+                $('#addMemberModal').modal('hide');
+            },
+            error: function(error) {
+                // Esta función se ejecuta si la solicitud falla
+                console.log(error);
+                $('#addMemberModal').modal('hide');
+
+            }
+        });
+
+        $('#addMemberModal').modal('hide');
+    }
+</script>

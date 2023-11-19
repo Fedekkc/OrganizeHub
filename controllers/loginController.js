@@ -23,6 +23,10 @@ function saveUser(req, res) {
     const user = new User(username, password, email, phone, admin, registerDate, lastLogin );
 
     createUser(user);
+
+    req.session.userLoggedIn = true;
+
+    res.redirect('/');
     
 }
 
@@ -38,6 +42,7 @@ async function loginUser(req, res) {
             
             req.session.projects = user.projects; // Store projects in the session
             
+            req.session.userLoggedIn = true;
             
             console.log("[+] loginUser(): User logged in");
             res.redirect('/projects');

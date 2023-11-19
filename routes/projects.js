@@ -23,5 +23,6 @@ router.post('/projects', projectController.newProjectRedirect);
 router.get('/newProject', projectController.newProjectView);
 router.post('/newProject', projectController.newProject);
 router.get('/projects/:id', projectController.getProject);
+router.post('/addMember', projectController.addMember);
 
 module.exports = router;
