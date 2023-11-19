@@ -25,14 +25,13 @@ class ProjectDao {
                 
                 const [rows] = await connection.execute(query);
                 let id = rows[0]['LAST_INSERT_ID()'];
-                console.log('[+] Project ID: ' + id);
-                // Agregamos al usuario que creó el proyecto como miembro del mismo
-                await ProjectDao.addMember(id, project.idCreador);
+                
+                await ProjectDao.addMember(id, project.idCreador, 'project-owner');
 
                 console.log('[+] Project successfully created.');
                 return result;
             } catch (error) {
-                console.error('Error al insertar un proyecto', error);
+                console.error('[-] Error al insertar un proyecto', error);
                 return null;
             }
         } else {

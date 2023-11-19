@@ -32,6 +32,14 @@ class UserDAO {
         }
     };
 
+    static async getUserRol(idUsuario, idProyecto) {
+        const connection = await connectDB();
+        const query = 'SELECT rol FROM Usuario_Proyecto WHERE idUsuario = ? AND idProyecto = ?';
+        const [rows] = await connection.execute(query, [idUsuario, idProyecto]);
+        let data = rows[0];
+        return data.rol;
+    }
+
     static async getUserProjects(id) {
         const connection = await connectDB();
         const [rows] = await connection.execute('SELECT idProyecto FROM Usuario_Proyecto WHERE idUsuario = ?', [id]);

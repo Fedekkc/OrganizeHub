@@ -27,7 +27,9 @@
                 {{#each members}}
                 <li>
                     {{this}}
+                    {{#in user.rol ['project-manager', 'project-owner']}}
                     <button type="button" class="btn btn-danger" onclick="deleteMember('{{this}}')">Eliminar</button>
+                    {{/in}}
                 </li>
                 {{/each}}
             </ul>
@@ -53,7 +55,6 @@
                                 <div class="form-group">
                                     <label for="roleSelect">Rol:</label>
                                     <select class="form-control" id="roleSelect">
-                                        <option value="viewer">Visor</option>
                                         <option value="member">Miembro</option>
                                         <option value="project-manager">Project Manager</option>
                                         <option value="project-owner">Project Owner</option>
@@ -219,7 +220,6 @@ function autocompleteMembers(input, list) {
     }
 }
 
-// ... Resto del script ...
 
 
 
@@ -278,4 +278,8 @@ function addMember() {
     }
 });
 }
+
+
 </script>
+
+

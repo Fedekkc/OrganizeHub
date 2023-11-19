@@ -95,8 +95,9 @@ async function getProject(req, res) {
     const members = await ProjectDao.getProjectMembers(id);
     const tasks = await ProjectDao.getProjectTasks(id);
     const teams = await ProjectDao.getProyectTeams(id);
+    const user = req.session.user || res.locals.user;
 
-    res.render('projects/project', { project, members, tasks, teams, id });
+    res.render('projects/project', { project, members, tasks, teams, id, user });
 
 }
 

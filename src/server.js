@@ -7,12 +7,20 @@ const { connectDB } = require('../db');
 const loginRoutes = require('../routes/login');
 const projectRoutes = require('../routes/projects');
 const session = require('express-session');
+const Handlebars = require('handlebars');
 const path = require('path');
 
 
 
 
 const app = express();
+
+Handlebars.registerHelper('in', function(elem, list, options) {
+    if(list.indexOf(elem) > -1) {
+        return options.fn(this);
+    }
+    return options.inverse(this);
+});
 
 // Configuración del motor de vistas
 app.engine('hbs', engine({ extname: '.hbs', defaultLayout: 'main' }));
