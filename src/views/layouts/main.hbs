@@ -1,43 +1,90 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Luego, importa la hoja de estilo de Bootstrap -->
+  
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand font-weight-bold" href="#">OrganizeHub</a>
-            <ul class="navbar-nav ml-auto">
-                {{#if userLoggedIn}}
-                    <li class="nav-item">
-                        <a class="nav-link" href="/profile">Mi perfil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/browse">Navegar</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/projects">Mis proyectos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/logout">Cerrar sesión</a>
-                    </li>
-                {{else}}
-                    <li class="nav-item">
-                        <a class="nav-link" href="/login">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/signup">Sign Up</a>
-                    </li>
-                {{/if}}
-            </ul>
-        </div> 
-    </nav>
+  <nav>
+    <div>
+      <a href="#">OrganizeHub</a>
+      <ul>
+        {{#if userLoggedIn}}
+          <li><a href="/profile">Mi perfil</a></li>
+          <li><a href="/browse">Navegar</a></li>
+          <li><a href="/projects">Mis proyectos</a></li>
+          <li><a href="/logout">Cerrar sesión</a></li>
+        {{else}}
+          <li><a href="/login">Login</a></li>
+          <li><a href="/signup">Sign Up</a></li>
+        {{/if}}
+      </ul>
+    </div>
+  </nav>
 
-    {{{body}}}
+  {{{body}}}
 
 </body>
+<style>
 
+    body {
+    background-color: #FCD5CE;
+    margin: 0;
+    padding: 0;
+}
+
+nav {
+  text-align: center;
+}
+
+nav a {
+  display: inline-block;
+  margin: 0 auto;
+  text-align: left; /* Alinea el texto a la izquierda dentro del enlace */
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  display: inline-block;
+  margin-right: 15px;
+}
+
+header {
+    background-color: #FBC4AB;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+}
+
+h1 {
+    color: #B07052;
+    background-color: #FFDAB9;
+    padding: 10px 20px;
+    margin: 0;
+}
+
+.signup-button {
+    background-color: #FFDAB9;
+    color: #B07052;
+    font-family: 'Buenard', sans-serif;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+</style>
 </html>
