@@ -7,37 +7,46 @@
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <style>
+        .container {
+            font-family: 'Buenard', sans-serif;
+        }
+    </style>
 </head>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h1>{{project._nombreProyecto}}</h1>
+            <h1 style="color: #F8AD9D;">{{project._nombreProyecto}}</h1>
         </div>
     </div>
+
     <div class="row">
         <div class="col-md-6">
-            <h2>{{project._descripcionProyecto}}</h2>
+            <h2 style="color: #FFDAB9;">{{project._descripcionProyecto}}</h2>
             {{#if project._fechaUltModificacion}}
-            <p>Last modified: {{project._fechaUltModificacion}}</p>
+            <p style="color: #B07052;">Last modified: {{project._fechaUltModificacion}}</p>
             {{/if}}
-            <h2>Members</h2>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal">Add Member</button>
+
+            <h2 style="color: #FFDAB9;">Members</h2>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal" style="background-color: #F8AD9D;">Add Member</button>
             <ul>
                 {{#each members}}
                 <li>
                     {{this}}
-                    <button type="button" class="btn btn-danger" onclick="deleteMember('{{this}}')">Eliminar</button>
+                    <button type="button" class="btn btn-danger" onclick="deleteMember('{{this}}')" style="background-color: #B07052;">Eliminar</button>
                 </li>
                 {{/each}}
             </ul>
+
             <!-- Add Member Modal -->
             <div class="modal" id="addMemberModal">
                 <!-- Modal content goes here -->
                 <!-- Example: -->
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <div class="modal-header">
+                        <div class="modal-header" style="background-color: #F8AD9D;">
                             <h5 class="modal-title">Add Member</h5>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
@@ -45,14 +54,13 @@
                             <!-- Modal body content goes here -->
                             <form>
                                 <div class="form-group">
-                                    <label for="userInput">Usuario:</label>
-                                    <input type="text" class="form-control" id="userInput"
-                                        placeholder="Nombre de usuario" oninput="autocompleteMembers('userInput','autocompleteList')">
+                                    <label for="userInput" style="color: #FFDAB9;">Usuario:</label>
+                                    <input type="text" class="form-control" id="userInput" placeholder="Nombre de usuario" oninput="autocompleteMembers('userInput','autocompleteList')" style="background-color: #B07052;">
                                     <div id="autocompleteList"></div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="roleSelect">Rol:</label>
-                                    <select class="form-control" id="roleSelect">
+                                    <label for="roleSelect" style="color: #FFDAB9;">Rol:</label>
+                                    <select class="form-control" id="roleSelect" style="background-color: #B07052;">
                                         <option value="member">Miembro</option>
                                         <option value="project-manager">Project Manager</option>
                                         <option value="project-owner">Project Owner</option>
@@ -60,83 +68,103 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" onclick="addMember()">Save changes</button>
+                        <div class="modal-footer" style="background-color: #F8AD9D;">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color: #B07052;">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="addMember()" style="background-color: #B07052;">Save changes</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-
-
-            <h2>Teams</h2>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#addTeamModal">Add Team</button>
+            <h2 style="color: #FFDAB9;">Teams</h2>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#addTeamModal" style="background-color: #F8AD9D;">Add Team</button>
             <ul>
                 {{#each teams}}
-                <li>{{this}}</li>
+                <li style="color: #FFDAB9;">{{this}}</li>
                 {{/each}}
             </ul>
+
             <div class="modal" id="addTeamModal">
                 <!-- Modal content goes here -->
                 <!-- Example: -->
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Add Member</h5>
+                        <div class="modal-header" style="background-color: #F8AD9D;">
+                            <h5 class="modal-title">Add Team</h5>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
-                        
+
                         <div class="modal-body">
                             <form>
                                 <div class="form-group">
-                                    <label for="usersInput">Usuarios:</label>
-                                    <input type="text" class="form-control" id="usersInput" placeholder="Nombres de usuarios" oninput="autocompleteMembers('usersInput', 'autocompleteList2')">
+                                    <label for="usersInput" style="color: #FFDAB9;">Usuarios:</label>
+                                    <input type="text" class="form-control" id="usersInput" placeholder="Nombres de usuarios" oninput="autocompleteMembers('usersInput', 'autocompleteList2')" style="background-color: #B07052;">
                                     <div id="autocompleteList2"></div>
                                 </div>
-                                <div id="selectedUsersContainer"></div> <!-- Contenedor para mostrar usuarios seleccionados -->
+                                <div id="selectedUsersContainer"></div>
                                 <div class="form-group">
-                                    <label for="teamNameInput">Nombre del equipo:</label>
-                                    <input type="text" class="form-control" id="teamNameInput" placeholder="Nombre del equipo">
+                                    <label for="teamNameInput" style="color: #FFDAB9;">Nombre del equipo:</label>
+                                    <input type="text" class="form-control" id="teamNameInput" placeholder="Nombre del equipo" style="background-color: #B07052;">
 
-                                    <label for="teamDescriptionInput">Descripción del equipo:</label>
-                                    <input type="text" class="form-control" id="teamDescriptionInput" placeholder="Descripción del equipo">
+                                    <label for="teamDescriptionInput" style="color: #FFDAB9;">Descripción del equipo:</label>
+                                    <input type="text" class="form-control" id="teamDescriptionInput" placeholder="Descripción del equipo" style="background-color: #B07052;">
                                 </div>
                             </form>
                         </div>
 
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                        <div class="modal-footer" style="background-color: #F8AD9D;">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color: #B07052;">Close</button>
+                            <button type="button" class="btn btn-primary" style="background-color: #B07052;">Save changes</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="col-md-6">
-            <h2>Tasks</h2>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#addTaskModal">Add Task</button>
+            <h2 style="color: #FFDAB9;">Tasks</h2>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#addTaskModal" style="background-color: #F8AD9D;">Add Task</button>
             <ul>
                 {{#each tasks}}
-                <li>{{this}}</li>
+                <li style="color: #FFDAB9;">{{this}}</li>
                 {{/each}}
             </ul>
+
             <div class="modal" id="addTaskModal">
                 <!-- Modal content goes here -->
                 <!-- Example: -->
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Add Member</h5>
+                        <div class="modal-header" style="background-color: #F8AD9D;">
+                            <h5 class="modal-title">Add Task</h5>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
                         <div class="modal-body">
                             <!-- Modal body content goes here -->
+
+                                   <form>
+                                <div class="form-group">
+                                    <label for="userInput" style="color: #FFDAB9;">Tarea:</label>
+                                    <input type="text" class="form-control" id="userInput" placeholder="Nombre de tarea" style="background-color: #B07052;">
+                               
+                                </div>
+
+                                <div class="form-group">
+                                <label for="userInput" style="color: #FFDAB9;">Tarea:</label>
+                                <input type="text" class="form-control" id="userInput" placeholder="Descripción de tarea" style="background-color: #B07052;">
+                               
+                                </div>
+                            <div class="form-group">
+                                <label for="userInput" style="color: #FFDAB9;">Tarea:</label>
+                                <input type="date" class="form-control" id="userInput" placeholder="Fecha de entrega de tarea" style="background-color: #B07052;">
+                               
+                                </div>
+            
+                            </form>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                        <div class="modal-footer" style="background-color: #F8AD9D;">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color: #B07052;">Close</button>
+                            <button type="button" class="btn btn-primary" style="background-color: #B07052;">Save changes</button>
                         </div>
                     </div>
                 </div>
@@ -144,6 +172,7 @@
         </div>
     </div>
 </div>
+
 
 <script>
 function deleteMember(username) {

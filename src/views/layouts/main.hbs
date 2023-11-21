@@ -1,21 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 </head>
 <body>
 
   <nav>
     <div class="navbar-container">
       <div class="brand-container">
-        <a href="#">OrganizeHub</a>
+        <a href="/" class="brand-link">OrganizeHub</a>
       </div>
       <ul class="navbar-menu">
         {{#if userLoggedIn}}
           <li><a href="/profile">Mi perfil</a></li>
-          <li><a href="/browse">Navegar</a></li>
-          <li><a href="/projects">Mis proyectos</a></li>
+          <!-- Añadimos un a href con un icono -->
+          <li><a href="/projects"><img src="../src/assets/icons/carpeta.png" alt="Mis proyectos"></a></li>
           <li><a href="/logout">Cerrar sesión</a></li>
         {{else}}
           <li><a href="/login">Login</a></li>
@@ -31,6 +32,7 @@
 <style>
 
 body {
+    font-family: 'Buenard', sans-serif;
     background-color: #FCD5CE;
     margin: 0;
     padding: 0;
@@ -46,12 +48,37 @@ nav {
     align-items: center;
     background-color: #FBC4AB;
     padding: 20px;
+    border-radius: 5px; /* Añade bordes redondeados al contenedor */
 }
 
 .brand-container {
+    padding-left: 40%;
     text-align: center;
-    flex-grow: 1; /* Hace que este contenedor ocupe el espacio restante */
+    
 }
+
+
+.brand-link {
+    text-decoration: none;
+    color: #B07052; /* Color del texto del enlace */
+    
+    /* Agrandamos el texto */
+    font-size: 28px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #FFDAB9;
+    transition: 0.2;
+    
+    
+}
+
+.brand-link:hover{ /* Cambiamos el color del texto cuando el cursor pasa por encima de las letras */
+    color: #FFDAB9;
+    background-color: #B07052;
+    transition: 0.5s;
+
+}
+
 
 .navbar-menu {
     list-style-type: none;
@@ -63,10 +90,26 @@ nav {
 .navbar-menu li {
     display: inline-block;
     margin-right: 15px;
+
+
+}
+
+.navbar-menu li:hover {
+    transform: scale(0.8);
+    transition: 0.5s;
+
 }
 
 nav a {
     text-align: center;
+    color: #B07052; /* Color del texto del enlace */
+    text-decoration: none;
+}
+nav a:hover{
+    text-decoration: none;
+    color: #342219; 
+    transition: 0.2s;
+    
 }
 
 </style>
