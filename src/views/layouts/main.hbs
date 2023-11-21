@@ -3,14 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
 </head>
 <body>
 
   <nav>
-    <div>
+    <div class="navbar-container">
       <a href="#">OrganizeHub</a>
-      <ul>
+      <ul class="navbar-menu">
         {{#if userLoggedIn}}
           <li><a href="/profile">Mi perfil</a></li>
           <li><a href="/browse">Navegar</a></li>
@@ -29,61 +28,37 @@
 </body>
 <style>
 
-    body {
+body {
     background-color: #FCD5CE;
     margin: 0;
     padding: 0;
 }
 
 nav {
-  text-align: center;
+    text-align: center;
 }
 
-nav a {
-  display: inline-block;
-  margin: 0 auto;
-  text-align: left; /* Alinea el texto a la izquierda dentro del enlace */
-}
-
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin-right: 15px;
-}
-
-header {
-    background-color: #FBC4AB;
-    padding: 20px;
+.navbar-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: #FBC4AB;
+    padding: 20px;
 }
 
-.title-container {
-    display: flex;
-    align-items: center;
-}
-
-h1 {
-    color: #B07052;
-    background-color: #FFDAB9;
-    padding: 10px 20px;
+.navbar-menu {
+    list-style-type: none;
     margin: 0;
+    padding: 0;
 }
 
-.signup-button {
-    background-color: #FFDAB9;
-    color: #B07052;
-    font-family: 'Buenard', sans-serif;
-    font-size: 16px;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
+.navbar-menu li {
+    display: inline-block;
+    margin-right: 15px;
+}
+
+nav a {
+    text-align: left; /* Alinea el texto a la izquierda dentro del enlace */
 }
 
 </style>
