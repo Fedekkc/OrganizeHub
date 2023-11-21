@@ -8,7 +8,9 @@
 
   <nav>
     <div class="navbar-container">
-      <a href="#">OrganizeHub</a>
+      <div class="brand-container">
+        <a href="#">OrganizeHub</a>
+      </div>
       <ul class="navbar-menu">
         {{#if userLoggedIn}}
           <li><a href="/profile">Mi perfil</a></li>
@@ -46,10 +48,16 @@ nav {
     padding: 20px;
 }
 
+.brand-container {
+    text-align: center;
+    flex-grow: 1; /* Hace que este contenedor ocupe el espacio restante */
+}
+
 .navbar-menu {
     list-style-type: none;
     margin: 0;
     padding: 0;
+    text-align: right; /* Alinea la lista de menú a la derecha */
 }
 
 .navbar-menu li {
@@ -58,7 +66,7 @@ nav {
 }
 
 nav a {
-    text-align: left; /* Alinea el texto a la izquierda dentro del enlace */
+    text-align: center;
 }
 
 </style>
