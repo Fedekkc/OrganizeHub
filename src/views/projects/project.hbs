@@ -18,19 +18,19 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h1 style="color: #F8AD9D;">{{project._nombreProyecto}}</h1>
+            <h1 style="color: #B07052;">{{project._nombreProyecto}}</h1>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-6">
-            <h2 style="color: #FFDAB9;">{{project._descripcionProyecto}}</h2>
+            <h2 style="color: #F8AD9D;">{{project._descripcionProyecto}}</h2>
             {{#if project._fechaUltModificacion}}
             <p style="color: #B07052;">Last modified: {{project._fechaUltModificacion}}</p>
             {{/if}}
 
-            <h2 style="color: #FFDAB9;">Members</h2>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal" style="background-color: #F8AD9D;">Add Member</button>
+            <h2 style="color: #B07052;">Miembros</h2>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal" style="background-color: #F8AD9D;">Añadir miembro</button>
             <ul>
                 {{#each members}}
                 <li>
@@ -47,7 +47,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header" style="background-color: #F8AD9D;">
-                            <h5 class="modal-title">Add Member</h5>
+                            <h5 class="modal-title">Añadir miembro</h5>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
                         <div class="modal-body">
@@ -76,8 +76,8 @@
                 </div>
             </div>
 
-            <h2 style="color: #FFDAB9;">Teams</h2>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#addTeamModal" style="background-color: #F8AD9D;">Add Team</button>
+            <h2 style="color: #B07052;">Equipos</h2>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#addTeamModal" style="background-color: #F8AD9D;">Añadir equipo</button>
             <ul>
                 {{#each teams}}
                 <li style="color: #FFDAB9;">{{this}}</li>
@@ -90,7 +90,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header" style="background-color: #F8AD9D;">
-                            <h5 class="modal-title">Add Team</h5>
+                            <h5 class="modal-title">Añadir equipo</h5>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
 
@@ -122,8 +122,8 @@
         </div>
 
         <div class="col-md-6">
-            <h2 style="color: #FFDAB9;">Tasks</h2>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#addTaskModal" style="background-color: #F8AD9D;">Add Task</button>
+            <h2 style="color: #B07052;">Tareas</h2>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#addTaskModal" style="background-color: #F8AD9D;">Añadir tarea</button>
             <ul>
                 {{#each tasks}}
                 <li style="color: #FFDAB9;">{{this}}</li>
