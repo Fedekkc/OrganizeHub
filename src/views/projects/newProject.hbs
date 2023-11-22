@@ -8,12 +8,12 @@
   <div>
     <h1 style="color: #B07052;"> Nuevo proyecto</h1>
     <form method="post" action="/newProject">
-      <div>
+      <div class= "name-project">
         <label for="projectName">Nombre de proyecto: </label>
         <input type="text" name="projectName" id="projectName" rows="3" placeholder="Ingresar nombre del proyecto">
       </div>
-      <div>
-        <label for="projectDescription">Descripción de proyecto:</label>
+      <div class= "desc-project">
+        <label for="projectDescription">Descripción de proyecto: </label>
         <textarea name="projectDescription" id="projectDescription" rows="3" placeholder="Ingresar descripción del proyecto"></textarea>
       </div>
                               <button type="submit">Crear proyecto</button>
@@ -25,31 +25,38 @@
 </html>
 <style>
   button {
-        font-family: 'Buenard', serif;
-        background-color: #F8AD9D;
-        padding-left: 60%;
-        color: #B07052;
-        border: none;
-        padding: 10px 12px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 20px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 5px;
-      } 
-    button:hover {
-        transform: scale(1.1);
-        transition: 0.5s;
-        background-color: #B07052; /* Invierte el color de fondo */
-        color: #F8AD9D; /* Invierte el color de la fuente */
+    font-family: 'Buenard', serif;
+    background-color: #F8AD9D;
+    padding-left: 60%;
+    color: #B07052;
+    border: none;
+    padding: 10px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
   }
 
-  div{
-    vertical-align: bottom;
+  button:hover {
+    transform: scale(1.1);
+    transition: 0.5s;
+    background-color: #B07052; /* Invierte el color de fondo */
+    color: #F8AD9D; /* Invierte el color de la fuente */
+  }
+
+  .name-project{
+    padding: 1%;
   }  
-    body{
-      text-align: center;
-    }
+
+  .desc-project{
+    align-content: center;
+    padding: 1%;
+  }
+
+  body{
+    text-align: center;
+  }
 </style>
