@@ -1,19 +1,31 @@
 
 class Tarea {
-  constructor(idTarea, idProyecto, nombreTarea, descripcionTarea) {
-    this._idTarea = idTarea;
+  constructor(idProyecto, nombreTarea, descripcionTarea, fechaEntrega, fechaCreacion) {
+
     this._idProyecto = idProyecto;
     this._nombreTarea = nombreTarea;
     this._descripcionTarea = descripcionTarea;
+    this._fechaEntrega = fechaEntrega;
+    this._fechaCreacion = fechaCreacion;
   }
 
-  get idTarea() {
-    return this._idTarea;
+  get fechaCreacion() {
+    return this._fechaCreacion;
   }
 
-  set idTarea(value) {
-    this._idTarea = value;
+  set fechaCreacion(value) {
+    this._fechaCreacion = value;
   }
+
+  get fechaEntrega() {
+    return this._fechaEntrega;
+  }
+
+  set fechaEntrega(value) {
+    this._fechaEntrega = value;
+  }
+
+
 
   get idProyecto() {
     return this._idProyecto;
@@ -39,3 +51,5 @@ class Tarea {
     this._descripcionTarea = value;
   }
 }
+
+module.exports = Tarea;

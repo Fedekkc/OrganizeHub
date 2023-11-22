@@ -2,6 +2,7 @@ const Proyecto = require('../src/models/proyecto');
 const ProjectDao = require('../src/DAOs/daoProyecto');
 const userDao = require('../src/DAOs/daoUsuario');
 const { getUserID } = require('../src/DAOs/daoUsuario');
+const Tarea = require('../src/models/tarea');
 
 // Function to render the projects view
 
@@ -158,6 +159,14 @@ async function deleteMember(req, res) {
 }
 
 
+async function addTask(req, res) {
+    const { taskName, taskDesc, taskDate, projectID } = req.body;
+    const task = new Tarea(projectID, taskName, taskDesc, taskDate, new Date());
+    await ProjectDao.addTask(projectID, task);
+    res.redirect('/projects/' + projectID);
+}
+
+
 module.exports = {
     showProjects,
     projects,
@@ -166,6 +175,7 @@ module.exports = {
     newProjectRedirect,
     getProject,
     addMember,
-    deleteMember
+    deleteMember,
+    addTask
 }
 

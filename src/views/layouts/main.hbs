@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 </head>
-<body class ="body-navbar">
+<body>
 
   <nav>
     <div class="navbar-container">
@@ -16,7 +16,7 @@
         {{#if userLoggedIn}}
           <li><a href="/profile">Mi perfil</a></li>
           <!-- Añadimos un a href con un icono -->
-          <li><a href="/projects"><img src="../src/assets/icons/carpeta.png" alt="Mis proyectos"></a></li>
+          <li><a href="/projects"><input type="image" src="/icons/moto.jpg" alt="asd"></a></li>
           <li><a href="/logout">Cerrar sesión</a></li>
         {{else}}
           <li><a href="/login">Login</a></li>
@@ -52,7 +52,7 @@ nav {
 }
 
 .brand-container {
-    padding-left: 43.25%;
+    padding-left: 40%;
     text-align: center;
     
 }

@@ -26,7 +26,10 @@ Handlebars.registerHelper('in', function(elem, list, options) {
 app.engine('hbs', engine({ extname: '.hbs', defaultLayout: 'main' }));
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
+app.use(express.static(path.join(__dirname, 'assets')));
 app.use(express.static(path.join(__dirname, 'src/styles')));
+
+
 
 
 // Configuración de bodyParser y session
@@ -61,7 +64,8 @@ app.listen(app.get('port'), () => {
 
 // Ruta de inicio
 app.get('/', (req, res) => {
-    res.render('home');
+    imagePath = path.join(__dirname, 'src/assets/icons/moto.jpg');
+    res.render('home', {imagePath});
 });
 // Rutas
 app.use('/', loginRoutes);

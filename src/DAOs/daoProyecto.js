@@ -39,6 +39,33 @@ class ProjectDao {
             return null;
         }
     }
+
+    static async addTask(idProyecto, tarea) {
+        if (tarea) {
+            try {
+                const connection = await connectDB();
+                console.log(tarea)
+                let query =
+                    'INSERT INTO Tareas (idProyecto, nombreTarea, descripcionTarea, fechaEntrega, fechaCreacion) VALUES (?, ?, ?, ?, ?)';
+                const valores = [
+                    idProyecto,
+                    tarea.nombreTarea,
+                    tarea.descripcionTarea,
+                    tarea.fechaEntrega,
+                    tarea.fechaCreacion,
+                ];
+                const result = await connection.execute(query, valores);
+                console.log('[+] Task successfully added.');
+                return result;
+            } catch (error) {
+                console.error('[-] Error al insertar una tarea', error);
+                return null;
+            }
+        } else {
+            console.error('[-] The task object is undefined or null.');
+            return null;
+        }
+    }
     
     static async addMember(idProyecto, idUsuario, rol) {
         const connection = await connectDB();
