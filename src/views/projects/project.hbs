@@ -46,30 +46,31 @@
                 <!-- Modal content goes here -->
                 <!-- Example: -->
                 <div class="modal-dialog">
-                    <div class="modal-content">
+                    <div class="modal-content" style="background-color: #FCD5CE;">
+                        
                         <div class="modal-header" style="background-color: #F8AD9D;">
                             <h5 class="modal-title">Añadir miembro</h5>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
                         <div class="modal-body">
-                            <!-- Modal body content goes here -->
+                            <!-- Modal body content goes here #FFDAB9 -->
                             <form>
                                 <div class="form-group">
-                                    <label for="userInput" style="color: #FFDAB9;">Usuario:</label>
-                                    <input type="text" class="form-control" id="userInput" placeholder="Nombre de usuario" oninput="autocompleteMembers('userInput','autocompleteList')" style="background-color: #B07052;">
+                                    <label for="userInput" style="color: #B07052;">Usuario:</label>
+                                    <input type="text" class="form-control" id="userInput" placeholder="Nombre de usuario" oninput="autocompleteMembers('userInput','autocompleteList')" style="background-color: #FBC4AB;">
                                     <div id="autocompleteList"></div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="roleSelect" style="color: #FFDAB9;">Rol:</label>
-                                    <select class="form-control" id="roleSelect" style="background-color: #B07052;">
+                                    <label for="roleSelect" style="color: #B07052;">Rol:</label>
+                                    <select class="form-control" id="roleSelect" style="background-color: #FBC4AB;">
                                         <option value="member">Miembro</option>
-                                        <option value="project-manager">Project Manager</option>
-                                        <option value="project-owner">Project Owner</option>
+                                        <option value="project-manager">Administrador de proyecto</option>
+                                        <option value="project-owner">Dueño de proyecto</option>
                                     </select>
                                 </div>
                             </form>
                         </div>
-                        <div class="modal-footer" style="background-color: #F8AD9D;">
+                        <div class="modal-footer" style="background-color: #FCD5CE;">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color: #B07052;">Close</button>
                             <button type="button" class="btn btn-primary" onclick="addMember()" style="background-color: #B07052;">Save changes</button>
                         </div>
