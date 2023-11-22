@@ -48,6 +48,32 @@
     .text-muted {
       color: #F8AD9D;
     }
+
+
+    .circle-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #B07052;
+      color: white;
+      font-size: 24px;
+      border: none;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .circle-btn:hover {
+      background-color: #F8AD9D;
+    }
+    .card-body.new {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
   </style>
 
 </head>
@@ -79,7 +105,15 @@
         </a>
       </div>
       {{/each}}
-
+      <div class="col-md-4 mb-4">
+          <div class="card shadow-sm">
+            <div class="card-body new">
+              <button class="circle-btn">+</button>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
     </div>
 
   </div>
