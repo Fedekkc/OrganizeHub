@@ -6,20 +6,42 @@
 </head>
 <body>
   <div>
-    <h1>New Project</h1>
+    <h1 style="color: #B07052;"> Nuevo proyecto</h1>
     <form method="post" action="/newProject">
       <div>
-        <label for="projectName">Project Name:</label>
+        <label for="projectName">Nombre de proyecto:</label>
         <input type="text" name="projectName" id="projectName" placeholder="Enter project name">
       </div>
       <div>
-        <label for="projectDescription">Project Description:</label>
+        <label for="projectDescription">Descripción de proyecto:</label>
         <textarea name="projectDescription" id="projectDescription" rows="3" placeholder="Enter project description"></textarea>
       </div>
-      <button type="submit">Create Project</button>
+      <button type="submit">Crear proyecto</button>
     </form>
   </div>
 
   <!-- No se incluyen los enlaces a jQuery, Popper JS y Bootstrap JS -->
 </body>
 </html>
+<style>
+  button {
+        font-family: 'Buenard', serif;
+        background-color: #F8AD9D;
+        color: #B07052;
+        border: none;
+        padding: 10px 12px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 20px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 5px;
+      } 
+    button:hover {
+        transform: scale(1.1);
+        transition: 0.5s;
+        background-color: #B07052; /* Invierte el color de fondo */
+        color: #F8AD9D; /* Invierte el color de la fuente */
+    }
+</style>
