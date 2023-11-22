@@ -7,11 +7,15 @@
         integrity="sha384-9QJ6nY5Qz8Y5tZ5z9vJzZz9zJZz9zJZz9zJZz9zJZz9zJZz9zJZz9zJZz9zJZz9z"
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    
+
 
     <style>
         .container {
             font-family: 'Buenard', sans-serif;
+        }
+        svg {
+            /* Establecemos el pointer*/
+            cursor: pointer;
         }
     </style>
 </head>
@@ -27,22 +31,32 @@
         <div class="col-md-6">
             <h2 style="color: #F8AD9D;">{{project._descripcionProyecto}}</h2>
             {{#if project._fechaUltModificacion}}
-         
+
             {{/if}}
 
             <h2 style="color: #B07052;">Miembros</h2>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal" style="background-color: #F8AD9D;">Añadir miembro</button>
-            <ul>
-                {{#each members}}
-                <li>    
-                    {{this}}
-
-                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#B07052" class="bi bi-person-dash" viewBox="0 0 16 16">
-  <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M11 12h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1m0-7a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4" 
-  onclick="deleteMember('{{this}}')"  />
+            <button  class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal">
+  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#B07052" class="bi bi-person-add" viewBox="0 0 16 16">
+  <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
   <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
 </svg>
-                    <button type="button" class="btn btn-danger" style="background-color: #B07052;">Eliminar</button>
+            </button>
+            
+          
+                
+            <ul>
+                {{#each members}}
+                <li>
+                    {{this}}
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#B07052"
+                        class="bi bi-person-dash" viewBox="0 0 16 16" onclick="deleteMember('{{this}}')" >
+                        <path
+                            d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M11 12h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1m0-7a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
+                        <path
+                            d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1z" />
+                    </svg>
+                    
                 </li>
                 {{/each}}
             </ul>
@@ -53,7 +67,7 @@
                 <!-- Example: -->
                 <div class="modal-dialog">
                     <div class="modal-content" style="background-color: #FCD5CE;">
-                        
+
                         <div class="modal-header" style="background-color: #F8AD9D;">
                             <h5 class="modal-title">Añadir miembro</h5>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -63,7 +77,10 @@
                             <form>
                                 <div class="form-group">
                                     <label for="userInput" style="color: #B07052;">Usuario:</label>
-                                    <input type="text" class="form-control" id="userInput" placeholder="Nombre de usuario" oninput="autocompleteMembers('userInput','autocompleteList')" style="background-color: #FBC4AB;">
+                                    <input type="text" class="form-control" id="userInput"
+                                        placeholder="Nombre de usuario"
+                                        oninput="autocompleteMembers('userInput','autocompleteList')"
+                                        style="background-color: #FBC4AB;">
                                     <div id="autocompleteList"></div>
                                 </div>
                                 <div class="form-group">
@@ -77,15 +94,18 @@
                             </form>
                         </div>
                         <div class="modal-footer" style="background-color: #FCD5CE;">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color: #B07052;">Close</button>
-                            <button type="button" class="btn btn-primary" onclick="addMember()" style="background-color: #B07052;">Save changes</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                style="background-color: #B07052;">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="addMember()"
+                                style="background-color: #B07052;">Save changes</button>
                         </div>
                     </div>
                 </div>
             </div>
 
             <h2 style="color: #B07052;">Equipos</h2>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#addTeamModal" style="background-color: #F8AD9D;">Añadir equipo</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#addTeamModal"
+                style="background-color: #F8AD9D;">Añadir equipo</button>
             <ul>
                 {{#each teams}}
                 <li style="color: #FFDAB9;">{{this}}</li>
@@ -106,23 +126,31 @@
                             <form>
                                 <div class="form-group">
                                     <label for="usersInput" style="color: #FFDAB9;">Usuarios:</label>
-                                    <input type="text" class="form-control" id="usersInput" placeholder="Nombres de usuarios" oninput="autocompleteMembers('usersInput', 'autocompleteList2')" style="background-color: #B07052;">
+                                    <input type="text" class="form-control" id="usersInput"
+                                        placeholder="Nombres de usuarios"
+                                        oninput="autocompleteMembers('usersInput', 'autocompleteList2')"
+                                        style="background-color: #B07052;">
                                     <div id="autocompleteList2"></div>
                                 </div>
                                 <div id="selectedUsersContainer"></div>
                                 <div class="form-group">
                                     <label for="teamNameInput" style="color: #FFDAB9;">Nombre del equipo:</label>
-                                    <input type="text" class="form-control" id="teamNameInput" placeholder="Nombre del equipo" style="background-color: #B07052;">
+                                    <input type="text" class="form-control" id="teamNameInput"
+                                        placeholder="Nombre del equipo" style="background-color: #B07052;">
 
-                                    <label for="teamDescriptionInput" style="color: #FFDAB9;">Descripción del equipo:</label>
-                                    <input type="text" class="form-control" id="teamDescriptionInput" placeholder="Descripción del equipo" style="background-color: #B07052;">
+                                    <label for="teamDescriptionInput" style="color: #FFDAB9;">Descripción del
+                                        equipo:</label>
+                                    <input type="text" class="form-control" id="teamDescriptionInput"
+                                        placeholder="Descripción del equipo" style="background-color: #B07052;">
                                 </div>
                             </form>
                         </div>
 
                         <div class="modal-footer" style="background-color: #F8AD9D;">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color: #B07052;">Close</button>
-                            <button type="button" class="btn btn-primary" style="background-color: #B07052;">Save changes</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                style="background-color: #B07052;">Close</button>
+                            <button type="button" class="btn btn-primary" style="background-color: #B07052;">Save
+                                changes</button>
                         </div>
                     </div>
                 </div>
@@ -131,7 +159,8 @@
 
         <div class="col-md-6">
             <h2 style="color: #B07052;">Tareas</h2>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#addTaskModal" style="background-color: #F8AD9D;">Añadir tarea</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#addTaskModal"
+                style="background-color: #F8AD9D;">Añadir tarea</button>
             <ul>
                 {{#each tasks}}
                 <li style="color: #FFDAB9;">{{this}}</li>
@@ -150,29 +179,34 @@
                         <div class="modal-body">
                             <!-- Modal body content goes here -->
 
-                                   <form>
+                            <form>
                                 <div class="form-group">
                                     <label for="userInput" style="color: #FFDAB9;">Tarea:</label>
-                                    <input type="text" class="form-control" id="taskName" placeholder="Nombre de tarea" style="background-color: #B07052;">
-                               
+                                    <input type="text" class="form-control" id="taskName" placeholder="Nombre de tarea"
+                                        style="background-color: #B07052;">
+
                                 </div>
 
                                 <div class="form-group">
-                                <label for="userInput" style="color: #FFDAB9;">Tarea:</label>
-                                <input type="text" class="form-control" id="taskDesc" placeholder="Descripción de tarea" style="background-color: #B07052;">
-                               
+                                    <label for="userInput" style="color: #FFDAB9;">Tarea:</label>
+                                    <input type="text" class="form-control" id="taskDesc"
+                                        placeholder="Descripción de tarea" style="background-color: #B07052;">
+
                                 </div>
-                            <div class="form-group">
-                                <label for="userInput" style="color: #FFDAB9;">Tarea:</label>
-                                <input type="date" class="form-control" id="taskDate" placeholder="Fecha de entrega de tarea" style="background-color: #B07052;">
-                               
+                                <div class="form-group">
+                                    <label for="userInput" style="color: #FFDAB9;">Tarea:</label>
+                                    <input type="date" class="form-control" id="taskDate"
+                                        placeholder="Fecha de entrega de tarea" style="background-color: #B07052;">
+
                                 </div>
-            
+
                             </form>
                         </div>
                         <div class="modal-footer" style="background-color: #F8AD9D;">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color: #B07052;">Close</button>
-                            <button type="button" class="btn btn-primary" style="background-color: #B07052;" onclick="addTask()">Save changes</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                style="background-color: #B07052;">Close</button>
+                            <button type="button" class="btn btn-primary" style="background-color: #B07052;"
+                                onclick="addTask()">Save changes</button>
                         </div>
                     </div>
                 </div>
@@ -183,77 +217,77 @@
 
 
 <script>
-function deleteMember(username) {
-    var projectID = "{{id}}";
+    function deleteMember(username) {
+        var projectID = "{{id}}";
 
-    // Envía una solicitud AJAX al servidor
-    $.ajax({
-        url: '/deleteMember',
-        type: 'POST',
-        data: { username: username, projectID: projectID },
-        success: function(response) {
-            // Si la solicitud es exitosa, redirige al usuario
-            window.location.href = '/projects/' + projectID;
-        },
-        error: function(error) {
-            // Si la solicitud falla, muestra un mensaje de error
-            console.log(error);
-            alert('Error deleting member');
-        }
-    });
-}
+        // Envía una solicitud AJAX al servidor
+        $.ajax({
+            url: '/deleteMember',
+            type: 'POST',
+            data: { username: username, projectID: projectID },
+            success: function (response) {
+                // Si la solicitud es exitosa, redirige al usuario
+                window.location.href = '/projects/' + projectID;
+            },
+            error: function (error) {
+                // Si la solicitud falla, muestra un mensaje de error
+                console.log(error);
+                alert('Error deleting member');
+            }
+        });
+    }
 
 
 
-var selectedUsers = [];
+    var selectedUsers = [];
 
-function addSelectedUser(username) {
-    selectedUsers.push(username);
-    updateSelectedUsers();
-}
+    function addSelectedUser(username) {
+        selectedUsers.push(username);
+        updateSelectedUsers();
+    }
 
-function removeSelectedUser(index) {
-    selectedUsers.splice(index, 1);
-    updateSelectedUsers();
-}
+    function removeSelectedUser(index) {
+        selectedUsers.splice(index, 1);
+        updateSelectedUsers();
+    }
 
-function updateSelectedUsers() {
-    var container = document.getElementById("selectedUsersContainer");
-    container.innerHTML = ""; // Limpiar el contenedor
+    function updateSelectedUsers() {
+        var container = document.getElementById("selectedUsersContainer");
+        container.innerHTML = ""; // Limpiar el contenedor
 
-    selectedUsers.forEach(function (user, index) {
-        var userDiv = document.createElement("div");
-        userDiv.innerHTML = '<span>' + user + '</span><button type="button" onclick="removeSelectedUser(' + index + ')" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
-        container.appendChild(userDiv);
-    });
-}
+        selectedUsers.forEach(function (user, index) {
+            var userDiv = document.createElement("div");
+            userDiv.innerHTML = '<span>' + user + '</span><button type="button" onclick="removeSelectedUser(' + index + ')" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+            container.appendChild(userDiv);
+        });
+    }
 
-// Modificar la función autocompleteMembers
-function autocompleteMembers(input, list) {
-    var inputElement = document.getElementById(input);
-    var autocompleteList = document.getElementById(list);
+    // Modificar la función autocompleteMembers
+    function autocompleteMembers(input, list) {
+        var inputElement = document.getElementById(input);
+        var autocompleteList = document.getElementById(list);
 
-    if (inputElement) {
-        var inputText = inputElement.value.trim();
+        if (inputElement) {
+            var inputText = inputElement.value.trim();
 
-        autocompleteList.innerHTML = "";
+            autocompleteList.innerHTML = "";
 
-        if (inputText !== "") {
-            var matchingMembers = getMatchingMembers(inputText);
+            if (inputText !== "") {
+                var matchingMembers = getMatchingMembers(inputText);
 
-            matchingMembers.forEach(function (member) {
-                var suggestion = document.createElement("div");
-                suggestion.innerHTML = "<strong>" + member + "</strong>";
-                suggestion.addEventListener("click", function () {
-                    addSelectedUser(member);
-                    inputElement.value = "";
-                    autocompleteList.innerHTML = "";
+                matchingMembers.forEach(function (member) {
+                    var suggestion = document.createElement("div");
+                    suggestion.innerHTML = "<strong>" + member + "</strong>";
+                    suggestion.addEventListener("click", function () {
+                        addSelectedUser(member);
+                        inputElement.value = "";
+                        autocompleteList.innerHTML = "";
+                    });
+                    autocompleteList.appendChild(suggestion);
                 });
-                autocompleteList.appendChild(suggestion);
-            });
+            }
         }
     }
-}
 
 
 
@@ -279,7 +313,7 @@ function autocompleteMembers(input, list) {
 
     function getMatchingMembers(text) {
         // Obtenemos los miembros del proyecto enviados desde el servidor como "members"
-        var projectMembers = [{{#each members}}"{{this}}",{{/each}}];
+        var projectMembers = [{{#each members}} "{{this}}", {{/each}}];
         console.log(projectMembers)
         var matchingMembers = projectMembers.filter(function (member) {
             return member.toLowerCase().includes(text.toLowerCase());
@@ -289,61 +323,59 @@ function autocompleteMembers(input, list) {
 </script>
 
 <script>
-function addMember() {
-    // Obtén el valor de entrada del usuario
-    var username = document.getElementById("userInput").value;
-    var rol = document.getElementById("roleSelect").value;
-    var projectID = "{{id}}";
+    function addMember() {
+        // Obtén el valor de entrada del usuario
+        var username = document.getElementById("userInput").value;
+        var rol = document.getElementById("roleSelect").value;
+        var projectID = "{{id}}";
 
-    // Envía una solicitud AJAX al servidor
-    $.ajax({
-        url: '/addMember',
-        type: 'POST',
-        data: { username: username, projectID: projectID, rol: rol },
-        success: function (response) {
-            // Si la solicitud es exitosa, espera a que el modal se haya ocultado y luego redirige al usuario
-            $('#addMemberModal').on('hidden.bs.modal', function () {
-                window.location.href = '/projects/' + projectID;
-            }).modal('hide');
-        },
-        error: function (error) {
-            // Si la solicitud falla, muestra un mensaje de error y oculta el modal
-            console.log(error);
-            alert('Error adding member');
-            $('#addMemberModal').modal('hide');
-        }
-    });
-}
+        // Envía una solicitud AJAX al servidor
+        $.ajax({
+            url: '/addMember',
+            type: 'POST',
+            data: { username: username, projectID: projectID, rol: rol },
+            success: function (response) {
+                // Si la solicitud es exitosa, espera a que el modal se haya ocultado y luego redirige al usuario
+                $('#addMemberModal').on('hidden.bs.modal', function () {
+                    window.location.href = '/projects/' + projectID;
+                }).modal('hide');
+            },
+            error: function (error) {
+                // Si la solicitud falla, muestra un mensaje de error y oculta el modal
+                console.log(error);
+                alert('Error adding member');
+                $('#addMemberModal').modal('hide');
+            }
+        });
+    }
 
-function addTask() {
-    // Obtén el valor de entrada del usuario
-    var taskName = document.getElementById("taskName").value;
-    var taskDesc = document.getElementById("taskDesc").value;
-    var taskDate = document.getElementById("taskDate").value;
-    var projectID = "{{id}}";
+    function addTask() {
+        // Obtén el valor de entrada del usuario
+        var taskName = document.getElementById("taskName").value;
+        var taskDesc = document.getElementById("taskDesc").value;
+        var taskDate = document.getElementById("taskDate").value;
+        var projectID = "{{id}}";
 
-    // Envía una solicitud AJAX al servidor
-    $.ajax({
-        url: '/addTask',
-        type: 'POST',
-        data: { taskName: taskName, taskDesc: taskDesc, taskDate: taskDate, projectID: projectID},
-        success: function (response) {
-            console.log(response);
-            // Si la solicitud es exitosa, espera a que el modal se haya ocultado y luego redirige al usuario
-            $('#addTaskmodal').on('hidden.bs.modal', function () {
-                window.location.href = '/projects/' + projectID;
-            }).modal('hide');
-        },
-        error: function (error) {
-            // Si la solicitud falla, muestra un mensaje de error y oculta el modal
-            console.log(error);
-            alert('Error adding Task');
-            $('#addTaskModal').modal('hide');
-        }
-    });
-}
+        // Envía una solicitud AJAX al servidor
+        $.ajax({
+            url: '/addTask',
+            type: 'POST',
+            data: { taskName: taskName, taskDesc: taskDesc, taskDate: taskDate, projectID: projectID },
+            success: function (response) {
+                console.log(response);
+                // Si la solicitud es exitosa, espera a que el modal se haya ocultado y luego redirige al usuario
+                $('#addTaskmodal').on('hidden.bs.modal', function () {
+                    window.location.href = '/projects/' + projectID;
+                }).modal('hide');
+            },
+            error: function (error) {
+                // Si la solicitud falla, muestra un mensaje de error y oculta el modal
+                console.log(error);
+                alert('Error adding Task');
+                $('#addTaskModal').modal('hide');
+            }
+        });
+    }
 
 
 </script>
-
-
