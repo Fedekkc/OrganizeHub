@@ -109,10 +109,12 @@ class UserDAO {
         
         // Format the lastLogin date using MySQL's format function
         const formattedLastLogin = user.lastLogin.toISOString().slice(0, 19).replace('T', ' ');
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(user.password, salt);
     
         await connection.execute(
             'UPDATE Usuarios SET username = ?, password = ?, email = ?, phone = ?, admin = ?, registerDate = ?, lastLogin = ? WHERE idUsuario = ?', 
-            [user.username, user.password, user.email, user.phone, user.admin, formattedDate, formattedLastLogin, id]
+            [user.username, hashedPassword, user.email, user.phone, user.admin, formattedDate, formattedLastLogin, id]
         );
     }
     

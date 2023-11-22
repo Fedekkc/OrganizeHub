@@ -9,7 +9,7 @@ const projectRoutes = require('../routes/projects');
 const session = require('express-session');
 const Handlebars = require('handlebars');
 const path = require('path');
-
+const daoProyecto = require('../src/DAOs/daoProyecto');
 
 
 
@@ -44,6 +44,8 @@ app.use(session({
 
 app.use((req, res, next) => {
     res.locals.userLoggedIn = req.session.userLoggedIn;
+
+
     next();
 });
 
@@ -64,8 +66,11 @@ app.listen(app.get('port'), () => {
 
 // Ruta de inicio
 app.get('/', (req, res) => {
-    imagePath = path.join(__dirname, 'src/assets/icons/moto.jpg');
-    res.render('home', {imagePath});
+    daoProyecto.getAllProjects().then(projects => {
+        console.log("[+] Rendering home");
+        console.log(projects)
+        res.render('home', { projects });
+    });
 });
 // Rutas
 app.use('/', loginRoutes);

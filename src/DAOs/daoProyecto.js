@@ -118,7 +118,7 @@ class ProjectDao {
     static async getAllProjects() {
         const connection = await connectDB();
         const [rows] = await connection.execute('SELECT * FROM Proyectos');
-        return rows.map((project) => new Proyecto(project.idProyecto, project.idCreador, project.nombreProyecto, project.cantidadMiembros, project.fechaCreacion, project.descripcionProyecto, project.fechaUltModificacion));
+        return rows.map((project) => new Proyecto(project.idCreador, project.nombreProyecto, project.cantidadMiembros, project.fechaCreacion, project.descripcionProyecto, project.fechaUltModificacion));
     }
 
     static async getProjectMembers(id) {
