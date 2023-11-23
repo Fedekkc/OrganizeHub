@@ -84,13 +84,17 @@ async function updateLastLogin(id) {
     }
 }
 
-
+async function profile(req, res) {
+    const user = req.session.user;
+    res.render('login/profile', { user });
+}
 
 
 module.exports = {
     login: login,
     signup: signup,
     saveUser: saveUser,
-    loginUser: loginUser
+    loginUser: loginUser,
+    profile: profile
 
 }
