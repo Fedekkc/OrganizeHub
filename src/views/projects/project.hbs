@@ -30,6 +30,7 @@
         .team-item {
             cursor: pointer;
         }
+
     </style>
 </head>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -219,7 +220,7 @@
             </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-6 order-md-2">
             <h2 style="color: #B07052;  text-align: right;">Tareas</h2>
             
             <svg xmlns="http://www.w3.org/2000/svg"  width="50" height="50" fill= "#F8AD9D" class="bi bi-clipboard-plus" viewBox="0 0 25 25"  data-toggle="modal" data-target="#addTaskModal"  style="float: right; justify: space-between">
@@ -283,6 +284,22 @@
 
 </div>
 
+    <style> 
+        .tarea {
+            display: flex;
+        }
+
+        .columna-izquierda {
+            flex: 1;
+            padding: 20px;
+            background-color: #F8AD9D;
+        }
+
+        .col-md-6 {
+            flex: 1;
+            padding: 20px;
+        }
+    </style>
 
 <script>
 
@@ -505,20 +522,5 @@
         });
     }
 
-<style> 
-        .tarea {
-            display: flex;
-        }
 
-        .columna-izquierda {
-            flex: 1;
-            padding: 20px;
-            background-color: #F8AD9D;
-        }
-
-        .col-md-6 {
-            flex: 1;
-            padding: 20px;
-        }
-    </style>
 </script>
