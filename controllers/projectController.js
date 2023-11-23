@@ -177,7 +177,7 @@ async function addTask(req, res) {
 async function addTeam(req, res) {
     const { teamName, teamDesc, projectID } = req.body;
     const team = new Team(projectID, teamName, teamDesc, new Date());
-    console.log(team)
+    console.log(teamName)
     await ProjectDao.addTeam(projectID, team);
     await ProjectDao.saveProjectChanges(projectID, 'Team ' + teamName + ' added to project at ' + new Date());
     res.redirect('/projects/' + projectID);
@@ -191,10 +191,9 @@ async function changesThisMonth(projectId) {
         
         // Obtén la lista de cambios realizados en el proyecto desde el inicio del mes hasta la fecha actual
         const changes = await ProjectDao.getProjectChangesSince(projectId, startOfMonth);
-        
+        console.log(changes);
         // Muestra la cantidad de cambios realizados en el proyecto este mes
-        const changesCount = changes.length;
-        return changesCount;
+        return changes;
     } catch (error) {
         console.error('[-] Error al obtener los cambios del proyecto', error);
         return null;
@@ -208,9 +207,6 @@ async function editTeam(req, res) {
     await ProjectDao.saveProjectChanges(projectID, 'Team ' + teamName + ' edited at ' + new Date());
     res.redirect('/projects/' + projectID);
 }
-
-//Funcion donde comparamos los cambios realizados desde la fecha de creacion del proyecto hasta la fecha actual
-//y los mostramos en la vista
 
 
 

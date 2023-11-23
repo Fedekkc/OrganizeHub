@@ -212,8 +212,8 @@
 
                         <div class="modal-footer" style="background-color:#F8AD9D;">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                               style="background-color: #B07052;">Close</button>
-                            <button type="button" class="btn btn-primary" style="background-color: #B07052" onclick="addTeam()">Save changes</button>
+                               style="background-color: #B07052;">Cerrar</button>
+                            <button type="button" class="btn btn-primary" style="background-color: #B07052" onclick="addTeam()">Guardar</button>
                         </div>
                     </div>
                 </div>
@@ -279,8 +279,11 @@
             </div>
         </div>
     </div>
-
-    <h1 style="color: #B07052;">Cambios este mes: {{changes}}</h1>
+    <h1 style="color: #B07052;">Cambios este mes: </h1>
+    {{#each changes}}
+    
+    {{changes.cambio}}
+    {{/each}}
 
 </div>
 
@@ -499,8 +502,8 @@
         // Obtén el valor de entrada del usuario
         var teamName = document.getElementById("teamNameInput").value;
         var teamDesc = document.getElementById("teamDescriptionInput").value;
+        var selectedUsers = document.getElementById("selectedUsersContainer").value;
         var projectID = "{{id}}";
-        console.log("ASD: " + teamName + " " + teamDesc + " " + projectID);
         // Envía una solicitud AJAX al servidor
         $.ajax({
             url: '/addTeam',

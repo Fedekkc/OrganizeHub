@@ -8,15 +8,18 @@
   <div>
     <h1 style="color: #B07052;"> Nuevo proyecto</h1>
     <form method="post" action="/newProject">
+             <label for="projectName"  style="color: #B07052;">Nombre de proyecto: </label>
+
       <div class= "name-project">
-        <label for="projectName">Nombre de proyecto: </label>
-        <input type="text" name="projectName" id="projectName" rows="3" placeholder="Ingresar nombre del proyecto">
+       
+        <input type="text" name="projectName" id="projectName" rows="3" placeholder="Nombre del proyecto" style="background-color: #FBC4AB; height: 40px; WIDTH: 150PX;">
       </div>
+      <label for="projectDescription" style="color: #B07052;">Descripción de proyecto: </label>
+
       <div class= "desc-project">
-        <label for="projectDescription">Descripción de proyecto: </label>
-        <textarea name="projectDescription" id="projectDescription" rows="3" placeholder="Ingresar descripción del proyecto"></textarea>
+        <textarea name="projectDescription" id="projectDescription" rows="3" placeholder="Ingresar descripción del proyecto"style="background-color: #FBC4AB;"></textarea>
       </div>
-                              <button type="submit">Crear proyecto</button>
+                              <button type="submit" style="background-color: #FBC4AB;">Crear proyecto</button>
     </form>
   </div>
 
@@ -24,6 +27,33 @@
 </body>
 </html>
 <style>
+
+  body{
+    font-family: 'Buenard', serif;
+
+
+    text-align: center;
+  }
+  #projectName{
+    font-family: 'Buenard', serif;
+
+    border-radius: 7px;
+    text-align: center;
+    border: none;
+  }
+
+  #projectDescription{
+    font-family: 'Buenard', serif;
+
+    border-radius: 7px;
+    text-align: center;
+        border: none;
+
+  }
+
+
+
+
   button {
     font-family: 'Buenard', serif;
     background-color: #F8AD9D;
@@ -56,7 +86,5 @@
     padding: 1%;
   }
 
-  body{
-    text-align: center;
-  }
+
 </style>
