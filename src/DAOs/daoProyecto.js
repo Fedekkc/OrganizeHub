@@ -2,7 +2,7 @@ const { connectDB } = require('../../db');
 const bcrypt = require('bcrypt');
 const Proyecto = require('../models/proyecto');
 const tarea = require('../models/tarea');
-const team = require('../models/team');
+const Team = require('../models/team');
 
 class ProjectDao {
     static async createProject(project) {
@@ -76,6 +76,45 @@ class ProjectDao {
         return result;
     }
     
+    static async addTeam(idProyecto, team) {
+        if (team) {
+            try {
+                const connection = await connectDB();
+                let query = "INSERT INTO GrupoDeTrabajo (idProyecto, nombreGrupo, descripcionGrupo, fechaCreacion) VALUES (?, ?, ?,?)";
+                const valores = [idProyecto, team.nombreGrupo, team.descripcionGrupo, team.fechaCreacion];
+                const result = await connection.execute(query, valores);
+                console.log('[+] Team successfully added.');
+                return result;
+            } catch (error) {
+                console.error('[-] Error al insertar un equipo', error);
+                return null;
+            }
+        } else {
+            console.error('[-] The team object is undefined or null.');
+            return null;
+        }
+
+    }
+
+    static async editTeam(teamId,team) {
+        if (team) {
+            try {
+                const connection = await connectDB();
+                let query = "UPDATE GrupoDeTrabajo SET nombreGrupo = ?, descripcionGrupo = ? WHERE idGrupo = ?";
+                const valores = [team.nombreGrupo, team.descripcionGrupo, teamId];
+                const result = await connection.execute(query, valores);
+                console.log('[+] Team successfully edited.');
+                return result;
+            } catch (error) {
+                console.error('[-] Error al editar un equipo', error);
+                return null;
+            }
+        } else {
+            console.error('[-] The team object is undefined or null.');
+            return null;
+        }
+    }
+
     static async getProjectID(idUsuario, nombreProyecto) {
         //Obtenemos todos los proyectos del usuario
         const connection = await connectDB();
@@ -118,7 +157,7 @@ class ProjectDao {
     static async getAllProjects() {
         const connection = await connectDB();
         const [rows] = await connection.execute('SELECT * FROM Proyectos');
-        return rows.map((project) => new Proyecto(project.idCreador, project.nombreProyecto, project.cantidadMiembros, project.fechaCreacion, project.descripcionProyecto, project.fechaUltModificacion));
+        return rows.map((project) => new Proyecto(project.idProyecto, project.idCreador, project.nombreProyecto, project.cantidadMiembros, project.fechaCreacion, project.descripcionProyecto, project.fechaUltModificacion));
     }
 
     static async getProjectMembers(id) {
@@ -146,9 +185,9 @@ class ProjectDao {
         const data = rows;
         let tasks = [];
         for (let i = 0; i < data.length; i++) {
-            const [rows] = await connection.execute('SELECT nombreTarea FROM Tareas WHERE idTarea = ?', [data[i].idTarea]);
+            const [rows] = await connection.execute('SELECT * FROM Tareas WHERE idTarea = ?', [data[i].idTarea]);
             let data2 = rows[0];
-            tasks.push(data2.nombreTarea);
+            tasks.push(data2);
         }
         return tasks;
     }
@@ -157,15 +196,37 @@ class ProjectDao {
         const connection = await connectDB();
         const [rows] = await connection.execute('SELECT idGrupo FROM GrupoDeTrabajo WHERE idProyecto = ?', [id]);
         const data = rows;
+        
         let teams = [];
         for (let i = 0; i < data.length; i++) {
-            const [rows] = await connection.execute('SELECT nombreEquipo FROM Equipos WHERE idEquipo = ?', [data[i].idEquipo]);
+            
+            const [rows] = await connection.execute('SELECT * FROM GrupoDeTrabajo WHERE idGrupo = ?', [data[i].idGrupo]);
             let data2 = rows[0];
-            teams.push(data2.nombreEquipo);
+            console.log(data2)
+            teams.push(new Team(data2.idGrupo, data2.nombreGrupo, data2.descripcionGrupo,data2.fechaCreacion));
         }
         return teams;
                 
     }
+
+    static async saveProjectChanges(id, cambios){
+        const connection = await connectDB();
+        const query = 'INSERT INTO Registro_Mensual (idProyecto, cambio, fechaCambio) VALUES (?, ?, ?)';
+        const valores = [id, cambios, new Date()];
+        const result = await connection.execute(query, valores);
+        console.log('[+] Changes successfully saved.');
+        return result;
+    }
+
+    static async getProjectChangesSince(id, fecha){
+        const connection = await connectDB();
+        const query = 'SELECT * FROM Registro_Mensual WHERE idProyecto = ? AND fechaCambio > ?';
+        const valores = [id, fecha];
+        const [rows] = await connection.execute(query, valores);
+        return rows;
+    }
 }
+
+
 
 module.exports = ProjectDao;

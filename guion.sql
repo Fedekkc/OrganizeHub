@@ -15,6 +15,8 @@ CREATE TABLE IF NOT EXISTS Usuarios (
     lastLogin DATETIME
 );
 
+
+
 -- Creación de la tabla de proyectos
 CREATE TABLE IF NOT EXISTS Proyectos (
     idProyecto INT AUTO_INCREMENT PRIMARY KEY,
@@ -24,8 +26,10 @@ CREATE TABLE IF NOT EXISTS Proyectos (
     fechaCreacion DATETIME,
     descripcionProyecto TEXT,
     fechaUltModificacion DATETIME,
-    deadlineProyecto DATETIME,
     foreign key(idCreador) REFERENCES Usuarios(idUsuario));
+    
+
+
 
 -- Creación de la tabla de tareas
 CREATE TABLE IF NOT EXISTS Tareas (
@@ -33,8 +37,10 @@ CREATE TABLE IF NOT EXISTS Tareas (
     idProyecto INT,
     nombreTarea VARCHAR(255) NOT NULL,
     descripcionTarea TEXT,
-    deadlineTarea DATETIME,
+    fechaEntrega DATE,
+    fechaCreacion DATE,
     foreign key (idProyecto) REFERENCES Proyectos(idProyecto));
+
 
 -- Creación de la tabla de subtareas
 CREATE TABLE IF NOT EXISTS Subtareas (
@@ -42,7 +48,6 @@ CREATE TABLE IF NOT EXISTS Subtareas (
     idTarea INT,
     nombreSubtarea VARCHAR(255) NOT NULL,
     descripcionSubtarea TEXT,
-    deadlineSubtarea DATETIME,
     foreign key(idTarea) REFERENCES Tareas(idTarea));
     
 CREATE TABLE IF NOT EXISTS GrupoDeTrabajo (
@@ -67,9 +72,24 @@ fechaIngreso DATE NOT NULL,
 rol VARCHAR(30),
 foreign key(idProyecto) REFERENCES Proyectos(idProyecto));
 
+CREATE TABLE IF NOT EXISTS Registro_Mensual(
+idProyecto INT NOT NULL,
+cambio TEXT NOT NULL,
+fechaCambio DATE NOT NULL,
+FOREIGN KEY(idProyecto) REFERENCES Proyectos(idProyecto));
+
+
+
+
+
+
 SELECT * FROM Usuarios;
+SELECT * FROM Usuario_Proyecto;
+SELECT * FROM Usuarios INNER JOIN Usuario_Proyecto ON Usuarios.idUsuario = Usuario_Proyecto.idUsuario;
+SELECT * FROM Proyectos;
+SELECT * FROM Tareas;
 
-
-SELECT * FROM Usuarios INNER JOIN Proyectos ON Usuarios.idUsuario = Proyectos.idProyecto;
+SELECT * FROM Proyectos INNER JOIN Usuarios ON Usuarios.idUsuario = Proyectos.idCreador;
     
+
 

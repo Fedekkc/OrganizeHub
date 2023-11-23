@@ -3,6 +3,8 @@ const ProjectDao = require('../src/DAOs/daoProyecto');
 const userDao = require('../src/DAOs/daoUsuario');
 const { getUserID } = require('../src/DAOs/daoUsuario');
 const Tarea = require('../src/models/tarea');
+const Team = require('../src/models/team');
+const { format } = require('date-fns');
 
 // Function to render the projects view
 
@@ -68,9 +70,11 @@ async function newProject(req, res) {
         console.log("[+] Project: ");
         console.log(project);
         await ProjectDao.createProject(project);
+        
         //Añadimos el proyecto a la lista de proyectos del usuario (La funcion project.getID no existe)
         //Obtenemos el ID del proyecto recién creado por medio de la consulta que te da el ultimo  ID
         const id = await ProjectDao.getProjectID(userID, projectName);
+        await ProjectDao.saveProjectChanges(id, 'Project ' + projectName + ' created at ' + new Date());
 
         //Añadimos el proyecto a la lista de proyectos del usuario
         user.projects.push(id);
@@ -97,36 +101,12 @@ async function getProject(req, res) {
     const tasks = await ProjectDao.getProjectTasks(id);
     const teams = await ProjectDao.getProyectTeams(id);
     const user = req.session.user || res.locals.user;
-
-    res.render('projects/project', { project, members, tasks, teams, id, user });
-
+    const changes = await changesThisMonth(id);
+    
+    
+    res.render('projects/project', { project, members, tasks, teams, id, user, changes });
 }
 
-async function addMember(req, res) {
-    const { username, projectID, rol } = req.body;
-    const userID = await userDao.getUserID(username);
-
-    // Comprobamos que el usuario exista
-    if (userID == null) {
-        console.log("[-] User does not exist");
-        res.redirect('/projects/' + projectID);
-        return;
-    }
-
-    // Comprobamos que el usuario no este en el proyecto
-    const projects = await userDao.getUserProjects(userID);
-    for (let i = 0; i < projects.length; i++) {
-        if (projects[i].idProyecto == projectID) {
-            console.log("[-] User already in project");
-            res.redirect('/projects/' + projectID);
-            return;
-        }
-    }
-
-    console.log("username: " + username + " userID: " + userID + " projectID: " + projectID);
-    await ProjectDao.addMember(projectID,userID,rol);
-    res.redirect('/projects/' + projectID);
-}
 
 async function deleteMember(req, res) {
     const { username, projectID } = req.body;
@@ -155,16 +135,84 @@ async function deleteMember(req, res) {
 
     console.log("username: " + username + " userID: " + userID + " projectID: " + projectID);
     await ProjectDao.deleteMember(projectID,userID);
+    await ProjectDao.saveProjectChanges(projectID, 'User ' + username + ' deleted from project at ' + new Date());
     res.redirect('/projects/' + projectID);
 }
 
 
+async function addMember(req, res) {
+    const { username, projectID, rol } = req.body;
+    const userID = await userDao.getUserID(username);
+
+    // Comprobamos que el usuario exista
+    if (userID == null) {
+        console.log("[-] User does not exist");
+        res.redirect('/projects/' + projectID);
+        return;
+    }
+
+    // Comprobamos que el usuario no este en el proyecto
+    const projects = await userDao.getUserProjects(userID);
+    for (let i = 0; i < projects.length; i++) {
+        if (projects[i].idProyecto == projectID) {
+            console.log("[-] User already in project");
+            res.redirect('/projects/' + projectID);
+            return;
+        }
+    }
+
+    console.log("username: " + username + " userID: " + userID + " projectID: " + projectID);
+    await ProjectDao.addMember(projectID,userID,rol);
+    await ProjectDao.saveProjectChanges(projectID, 'User ' + username + ' added to project at ' + new Date());
+    res.redirect('/projects/' + projectID);
+}
 async function addTask(req, res) {
     const { taskName, taskDesc, taskDate, projectID } = req.body;
     const task = new Tarea(projectID, taskName, taskDesc, taskDate, new Date());
     await ProjectDao.addTask(projectID, task);
+    await ProjectDao.saveProjectChanges(projectID, 'Task ' + taskName + ' added to project at ' + new Date());
     res.redirect('/projects/' + projectID);
 }
+
+async function addTeam(req, res) {
+    const { teamName, teamDesc, projectID } = req.body;
+    const team = new Team(projectID, teamName, teamDesc, new Date());
+    console.log(team)
+    await ProjectDao.addTeam(projectID, team);
+    await ProjectDao.saveProjectChanges(projectID, 'Team ' + teamName + ' added to project at ' + new Date());
+    res.redirect('/projects/' + projectID);
+}
+
+async function changesThisMonth(projectId) {
+    try {
+
+        // Obtén la fecha de inicio del mes actual
+        const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+        
+        // Obtén la lista de cambios realizados en el proyecto desde el inicio del mes hasta la fecha actual
+        const changes = await ProjectDao.getProjectChangesSince(projectId, startOfMonth);
+        
+        // Muestra la cantidad de cambios realizados en el proyecto este mes
+        const changesCount = changes.length;
+        return changesCount;
+    } catch (error) {
+        console.error('[-] Error al obtener los cambios del proyecto', error);
+        return null;
+    }
+}
+
+async function editTeam(req, res) {
+    const { teamName, teamDesc, teamID, projectID } = req.body;
+    const team = new Team(projectID, teamName, teamDesc, new Date());
+    await ProjectDao.editTeam(teamID, team);
+    await ProjectDao.saveProjectChanges(projectID, 'Team ' + teamName + ' edited at ' + new Date());
+    res.redirect('/projects/' + projectID);
+}
+
+//Funcion donde comparamos los cambios realizados desde la fecha de creacion del proyecto hasta la fecha actual
+//y los mostramos en la vista
+
+
 
 
 module.exports = {
@@ -176,6 +224,9 @@ module.exports = {
     getProject,
     addMember,
     deleteMember,
-    addTask
+    addTask,
+    changesThisMonth,
+    addTeam,
+    editTeam
 }
 

@@ -39,20 +39,25 @@ function saveUser(req, res) {
     
 }
 
+
 async function loginUser(req, res) {
     const { username, password } = req.body;
-    
+
     try {
         const user = await findByUsername(username);
-        if (bcrypt.compareSync(password, user.password)) { 
-            const userid = await getUserID(user.username); // Espera la resolución de la promesa
-            await updateLastLogin(userid); // Espera la resolución de la promesa
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        if (passwordMatch) {
+            const userid = await getUserID(user.username);
+            await updateLastLogin(userid);
+
             req.session.user = user;
-            
-            req.session.projects = user.projects; // Store projects in the session
-            
+            req.session.projects = user.projects;
             req.session.userLoggedIn = true;
-            
+
             console.log("[+] loginUser(): User logged in");
             res.redirect('/projects');
         } else {
@@ -64,6 +69,7 @@ async function loginUser(req, res) {
         console.log("[-] Could not find user");
     }
 }
+
 
 async function updateLastLogin(id) {
     try {

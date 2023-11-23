@@ -6,3 +6,5 @@ class Team {
     this.fechaCreacion = fechaCreacion;
   }
 }
+
+module.exports = Team;

@@ -68,7 +68,6 @@ app.listen(app.get('port'), () => {
 app.get('/', (req, res) => {
     daoProyecto.getAllProjects().then(projects => {
         console.log("[+] Rendering home");
-        console.log(projects)
         res.render('home', { projects });
     });
 });
