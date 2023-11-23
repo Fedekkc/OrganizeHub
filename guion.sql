@@ -88,8 +88,11 @@ SELECT * FROM Usuario_Proyecto;
 SELECT * FROM Usuarios INNER JOIN Usuario_Proyecto ON Usuarios.idUsuario = Usuario_Proyecto.idUsuario;
 SELECT * FROM Proyectos;
 SELECT * FROM Tareas;
-
+SELECT * FROM GrupoDeTrabajo;
+SELECT * FROM Registro_Mensual;
+SELECT * FROM Proyectos INNER JOIN Registro_Mensual ON Proyectos.idProyecto = Registro_Mensual.idProyecto;
 SELECT * FROM Proyectos INNER JOIN Usuarios ON Usuarios.idUsuario = Proyectos.idCreador;
+
     
 
 
