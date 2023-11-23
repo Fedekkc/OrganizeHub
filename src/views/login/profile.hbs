@@ -1,5 +1,59 @@
+  <title>Perfil</title>
+  <style>
+    body {
+       align-items: center;
+      justify-content: center;
+      margin: 0;
+      /* Color de fondo de la página */
+    }
 
-<h1>Profile</h1>
-<p>Welcome, {{user.username}}!</p>
-<p>Email: {{user.email}}</p>
-<p>Phone: {{user.phone}}</p>
+    .navbar {
+      /* Estilos de tu barra de navegación */
+      background-color: #333;
+      color: white;
+      padding: 1px;
+    
+    }
+
+    .perfil-container {
+      text-align: center;
+      padding: 1px;
+      margin-top: 0px; /* Ajusta este valor según la altura de tu navbar */
+      border-radius: 1px;
+      
+     
+    }
+
+ .perfil-background {
+     
+         padding-left: 10px;
+    padding-right: 10px;
+      margin-top: 10px; /* Ajusta este valor según la altura de tu navbar */
+      border-radius: 1px;
+      background-color: #FFFFFF; /* Color de fondo del perfil */
+     
+    }
+    h1 {
+      color: #FBC4AB;
+    }
+
+    p {
+      color: #B07052;
+    }
+    
+  </style>
+</head>
+<body>
+  
+
+
+  <div class="perfil-container">
+
+    <h1>Perfil</h1>
+         <div class="perfil-background"></div>
+    <p>Bienvenido, {{user.username}}! aquí podrá ver todos sus datos</p>
+    <p>Email: {{user.email}}</p>
+    <p>Número de teléfono: {{user.phone}}</p>
+  </div>
+</body>
+</html>
