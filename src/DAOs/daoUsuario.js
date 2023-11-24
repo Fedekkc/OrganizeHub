@@ -14,6 +14,14 @@ class UserDAO {
                     console.log('[+] User already exists.');
                     return null;
                 }
+                //Comprobamos que el usuario no exista
+                const [rows2] = await connection.execute('SELECT * FROM Usuarios WHERE username = ?', [user.username]);
+                if(rows2.length > 0){
+                    console.log('[+] Username already exists.');
+                    return null;
+                }
+                
+
                 //Encriptamos la contraseña
                 const salt = await bcrypt.genSalt(10);
                 const hashedPassword = await bcrypt.hash(user.password, salt);

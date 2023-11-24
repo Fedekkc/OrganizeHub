@@ -8,7 +8,6 @@ function sessionMiddleware(req, res, next) {
     console.log("[+] Projects: " + res.locals.projects);
     next(req.session.user);
   } else {
-    // Si no hay sesión o usuario en la sesión, redirige a la página de inicio de sesión
     res.redirect('/login'); // Ajusta la ruta según tu estructura de rutas
   }
 }
