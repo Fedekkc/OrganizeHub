@@ -60,14 +60,34 @@
     .profileImage {
       padding-left: 28%;
       
+      
     }
+
+    /* Al hacer hover a la imagen, debe girar sobre sí
+    para mostrar una card con un botón para cambiar la imagen
+    */
 
     .imagen:hover {
-      cursor: pointer;
-
+      transform: rotate(360deg);
+      transition: transform 1s;
       
-
     }
+
+    .imagen {
+      display: none;
+      margin-left: 13%;
+      border-radius: 50%;
+      border: 1px solid #B07052;
+      box-shadow: 0 0 10px rgba(36, 17, 17, 0.1);
+      width: 220px;
+      height: 220px;
+    }
+
+
+
+
+
+
 
 
     
@@ -89,7 +109,7 @@
       <form action="/profile" method="POST" enctype="multipart/form-data">
       
       <input type="file" name="profileImage" class="profileImage" accept="image/*" onchange="previewImage(event)" />
-      <img id="preview" class="imagen"src="#" alt="Preview" style="display: none; width: 220px; height: 220px; border-radius: 50%; border: 1px solid #B07052; box-shadow: 0 0 10px rgba(36, 17, 17, 0.1);  margin-left: 13%" />
+      <img id="preview" class="imagen"src="#" alt="Preview"  />
       <script>
         function previewImage(event) {
           var reader = new FileReader();
@@ -101,9 +121,85 @@
           reader.readAsDataURL(event.target.files[0]);
         }
       </script>
-      <button type="submit">Subir imagen</button>
+      
     </div>
+    <br>
+    <button class="submitButton" type="submit">Subir imagen</button>
     
   </div>
 </body>
+
+<style>
+@keyframes gradient {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+
+@keyframes pulse {
+  0% {transform: scale(1);}
+  50% {transform: scale(1.05);}
+  100% {transform: scale(1);}
+}
+
+.submitButton {
+  border: none;
+  color: white;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(36, 17, 17, 0.3);
+  background: linear-gradient(-45deg, #B07052, #a78576, #FBC4AB, rgb(8, 34, 28));
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite, pulse 2s infinite;
+}
+
+.submitButton:hover {
+  box-shadow: 0 0 20px rgba(36, 17, 17, 0.5);
+}
+
+.submitButton:active {
+  transform: scale(0.9);
+}
+
+.submitButton:focus {
+  outline: none;
+}
+
+.submitButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.submitButton span {
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.submitButton span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.submitButton:hover span {
+  padding-right: 25px;
+}
+
+.submitButton:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+
+</style>
 </html>
