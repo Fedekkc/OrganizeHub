@@ -26,8 +26,8 @@
 
  .perfil-background {
      
-         padding-left: 10px;
-    padding-right: 10px;
+      padding-left: 10px;
+      padding-right: 10px;
       margin-top: 10px; /* Ajusta este valor según la altura de tu navbar */
       border-radius: 1px;
       background-color: #FFFFFF; /* Color de fondo del perfil */
@@ -40,6 +40,23 @@
     p {
       color: #B07052;
     }
+    .image-container {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: aliceblue;
+      padding: 10px;
+      border-radius: 50%; /* Cambiar el valor a 50% para hacerlo un círculo */
+      border: 1px solid #B07052;
+      box-shadow: 0 0 10px rgba(36, 17, 17, 0.1); /* Agregar sombra */
+      width: 200px; /* Ajustar el ancho según tus necesidades */
+      height: 200px; /* Ajustar la altura según tus necesidades */
+    }
+
+    .profileImage {
+      display: none;
+    }
     
   </style>
 </head>
@@ -50,10 +67,18 @@
   <div class="perfil-container">
 
     <h1>Perfil</h1>
-         <div class="perfil-background"></div>
+
     <p>Bienvenido, {{user.username}}! aquí podrá ver todos sus datos</p>
     <p>Email: {{user.email}}</p>
     <p>Número de teléfono: {{user.phone}}</p>
+    <!-- Botón para solicitarle su imagen de perfil al usuario -->
+    <div class="image-container">
+      <form action="/profile" method="POST" enctype="multipart/form-data">
+      
+      <input type="file" name="profileImage" class="profileImage" />
+      <button type="submit">Subir imagen</button>
+    </div>
+    
   </div>
 </body>
 </html>
