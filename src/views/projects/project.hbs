@@ -277,10 +277,12 @@
         </div>
     </div>
     <h1 style="color: #B07052;">Cambios este mes: </h1>
-    {{#each changes}}
-    
-        <h1>{{this.cambio}} </h1>
-    {{/each}}
+    <ul>
+        {{#each changes}}
+        <li style="color: #000000;">{{this.cambio}}</li>
+        {{/each}}
+    </ul>
+
 
 </div>
 
