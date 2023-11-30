@@ -16,6 +16,9 @@
     }
 
     .perfil-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       text-align: center;
       padding: 1px;
       margin-top: 0px; /* Ajusta este valor según la altura de tu navbar */
@@ -55,8 +58,18 @@
     }
 
     .profileImage {
-      display: none;
+      padding-left: 28%;
+      
     }
+
+    .imagen:hover {
+      cursor: pointer;
+
+      
+
+    }
+
+
     
   </style>
 </head>
@@ -75,7 +88,19 @@
     <div class="image-container">
       <form action="/profile" method="POST" enctype="multipart/form-data">
       
-      <input type="file" name="profileImage" class="profileImage" />
+      <input type="file" name="profileImage" class="profileImage" accept="image/*" onchange="previewImage(event)" />
+      <img id="preview" class="imagen"src="#" alt="Preview" style="display: none; width: 220px; height: 220px; border-radius: 50%; border: 1px solid #B07052; box-shadow: 0 0 10px rgba(36, 17, 17, 0.1);  margin-left: 13%" />
+      <script>
+        function previewImage(event) {
+          var reader = new FileReader();
+          reader.onload = function() {
+            var preview = document.getElementById('preview');
+            preview.src = reader.result;
+            preview.style.display = 'block';
+          }
+          reader.readAsDataURL(event.target.files[0]);
+        }
+      </script>
       <button type="submit">Subir imagen</button>
     </div>
     
