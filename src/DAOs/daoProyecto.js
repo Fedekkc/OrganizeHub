@@ -157,7 +157,7 @@ class ProjectDao {
     static async getAllProjects() {
         const connection = await connectDB();
         const [rows] = await connection.execute('SELECT * FROM Proyectos');
-        return rows.map((project) => new Proyecto(project.idProyecto, project.idCreador, project.nombreProyecto, project.cantidadMiembros, project.fechaCreacion, project.descripcionProyecto, project.fechaUltModificacion));
+        return rows.map((project) => new Proyecto(project.idCreador, project.nombreProyecto, project.cantidadMiembros, project.fechaCreacion, project.descripcionProyecto, project.fechaUltModificacion));
     }
 
     static async getProjectMembers(id) {
@@ -203,7 +203,7 @@ class ProjectDao {
             const [rows] = await connection.execute('SELECT * FROM GrupoDeTrabajo WHERE idGrupo = ?', [data[i].idGrupo]);
             let data2 = rows[0];
             console.log(data2)
-            teams.push(new Team(data2.idGrupo, data2.nombreGrupo, data2.descripcionGrupo,data2.fechaCreacion));
+            teams.push(new Team(id, data2.nombreGrupo, data2.descripcionGrupo,data2.fechaCreacion));
         }
         return teams;
                 

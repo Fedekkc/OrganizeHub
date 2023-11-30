@@ -44,9 +44,6 @@
     <div class="row">
         <div class="col-md-6">
             <h2 style="color: #F8AD9D;">{{project._descripcionProyecto}}</h2>
-            {{#if project._fechaUltModificacion}}
-
-            {{/if}}
 
             <h2 style="color: #B07052;">Miembros</h2>
 
@@ -94,7 +91,7 @@
                                     <label for="userInput" style="color: #B07052;">Usuario:</label>
                                     <input type="text" class="form-control" id="userInput"
                                         placeholder="Nombre de usuario"
-                                        oninput="autocompleteMembers('userInput','autocompleteList')"
+                                        oninput="autocompleteUsers('userInput','autocompleteList')"
                                         style="background-color: #FBC4AB;">
                                     <div id="autocompleteList"></div>
                                 </div>
@@ -155,7 +152,7 @@
                                 <div id="selectedUsersContainer"></div>
                                 <div class="form-group">
                                      <label for="roleSelect" style="color:#B07052;">Nombre del equipo:</label>
-                                    <input type="text" class="form-control" id="teamNameInput"
+                                    <input type="text" class="form-control" id="teamNameEdit"
                                         placeholder="Nombre del equipo" style="background-color: #FBC4AB;">
 
                                     <label for="teamDescriptionInput" style="color:  #B07052;">Descripción del equipo:</label>
@@ -282,7 +279,7 @@
     <h1 style="color: #B07052;">Cambios este mes: </h1>
     {{#each changes}}
     
-    {{changes.cambio}}
+        <h1>{{this.cambio}} </h1>
     {{/each}}
 
 </div>
@@ -319,7 +316,6 @@
             type: 'POST',
             data: { username: username, projectID: projectID },
             success: function (response) {
-                // Si la solicitud es exitosa, redirige al usuario
                 window.location.href = '/projects/' + projectID;
             },
             error: function (error) {
@@ -355,6 +351,55 @@
         });
     }
 
+    //Funcion para autocompletar con los usuarios de la base de datos
+    function autocompleteUsers(input, list) {
+        var inputElement = document.getElementById(input);
+        var autocompleteList = document.getElementById(list);
+
+        if (inputElement) {
+            var inputText = inputElement.value.trim();
+
+            autocompleteList.innerHTML = "";
+
+            if (inputText !== "") {
+                var matchingUsers = getUnmatchingUsers(inputText);
+
+                matchingUsers.forEach(function (user) {
+                    var suggestion = document.createElement("div");
+                    suggestion.innerHTML = "<strong>" + user + "</strong>";
+                    suggestion.addEventListener("click", function () {
+                        addSelectedUser(user);
+                        inputElement.value = user;
+                        autocompleteList.innerHTML = "";
+                    });
+                    autocompleteList.appendChild(suggestion);
+                });
+            }
+        }
+     }
+
+    //Funcion para obtener los usuarios que no están en el proyecto
+    function getUnmatchingUsers(text){
+        var users = [{{#each users}} "{{this.username}}", {{/each}}];  
+        
+        //Recorremos los usuarios de la base de datos y los comparamos con los del proyecto
+        for (var i = 0; i < users.length; i++) {
+            for (var j = 0; j < selectedUsers.length; j++) {
+                if (users[i] == selectedUsers[j]) { // Si el usuario ya está en el proyecto, lo eliminamos de la lista de usuarios
+                    users.splice(i, 1);
+                }
+            }
+        }
+
+        return users.filter(function (user) {
+            return user.toLowerCase().includes(text.toLowerCase());
+        });
+
+    }
+
+
+    
+    
     // Modificar la función autocompleteMembers
     function autocompleteMembers(input, list) {
         var inputElement = document.getElementById(input);
@@ -418,7 +463,7 @@
 <script>
     function editTeam() {
         // Obtén el valor de entrada del usuario
-        var teamName = document.getElementById("teamNameInput").value;
+        var teamName = document.getElementById("teamNameEdit").value;
         var teamDesc = document.getElementById("teamDescriptionInput").value;
         var projectID = "{{id}}";
 
@@ -462,10 +507,10 @@
                 }).modal('hide');
             },
             error: function (error) {
-                // Si la solicitud falla, muestra un mensaje de error y oculta el modal
+                // Si la solicitud falla, le muestra al usuaario un mensaje de error dentro del modal
                 console.log(error);
-                alert('Error adding member');
-                $('#addMemberModal').modal('hide');
+                alert('ERROR: El usuario no existe o ya es miembro del proyecto');
+
             }
         });
     }
@@ -510,7 +555,7 @@
             type: 'POST',
             data: { teamName: teamName, teamDesc: teamDesc, projectID: projectID, selectedUsers: selectedUsers },
             success: function (response) {
-                console.log(response);
+                alert('Team with name: ' + teamName + ' added successfully');
                 // Si la solicitud es exitosa, espera a que el modal se haya ocultado y luego redirige al usuario
                 $('#addTeamModal').on('hidden.bs.modal', function () {
                     window.location.href = '/projects/' + projectID;

@@ -3,13 +3,14 @@ const { engine } = require('express-handlebars');
 const myconn = require('express-myconnection');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
-const { connectDB } = require('../db');
+const { connectDB, disconnectDB } = require('../db');
 const loginRoutes = require('../routes/login');
 const projectRoutes = require('../routes/projects');
 const session = require('express-session');
 const Handlebars = require('handlebars');
 const path = require('path');
 const daoProyecto = require('../src/DAOs/daoProyecto');
+const { start } = require('repl');
 
 
 
@@ -54,20 +55,27 @@ app.use((req, res, next) => {
 
 
 
-// Conexión a la base de datos
-connectDB();
+const startApp = async () => {
+    try {
+        await connectDB();
+        app.set('port', process.env.PORT || 3000);
+        app.listen(app.get('port'), () => {
+            console.log(`[+] Server succesfully started at port: ${app.get('port')}`);
+        });
+    } catch (error) {
+        console.error('Error al iniciar la aplicación:', error);
+    }
+};
 
-// Definir el puerto y comenzar el servidor
-app.set('port', process.env.PORT || 3000);
-app.listen(app.get('port'), () => {
-    console.log(`[+] Server succesfully started at port: ${app.get('port')}`);
-});
+
+startApp();
 
 
 // Ruta de inicio
 app.get('/', (req, res) => {
     daoProyecto.getAllProjects().then(projects => {
         console.log("[+] Rendering home");
+        console.log(projects);
         res.render('home', { projects });
     });
 });
@@ -75,5 +83,17 @@ app.get('/', (req, res) => {
 app.use('/', loginRoutes);
 app.use('/', projectRoutes);
 
+process.on('SIGINT', async () => {
+    console.log('Cerrando la aplicación y la conexión a la base de datos...');
+    try {
+        // Cierra la conexión a la base de datos
+        await disconnectDB();
+        console.log('[+] Conexión a la base de datos cerrada exitosamente.');
+        process.exit(0);
+    } catch (error) {
+        console.error('[-] Error desconectando la Base de datos: ', error);
+        process.exit(1);
+    }
+});
 
 

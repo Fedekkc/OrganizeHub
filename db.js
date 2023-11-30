@@ -17,7 +17,16 @@ const connectDB = async () => {
     }
 };
 
+const disconnectDB = async (connection) => {
+    try {
+        await connection.end();
+        console.log('[+] Disconnected from MySQL successfully.');
+    } catch (error) {
+        console.error('Error disconnecting from MySQL', error);
+        process.exit(1);
+    }
+}
 
 
 
-module.exports = { connectDB };
+module.exports = { connectDB, disconnectDB };
