@@ -10,9 +10,17 @@
 
 
     <style>
+
+
         .container {
             font-family: 'Buenard', sans-serif;
+            display: flex;
+            flex-direction: column;
+            padding-top: 50px; /* Ajusta este valor según el alto de tu barra .info-proyecto */
         }
+
+
+
         svg {
             /* Establecemos el pointer*/
             cursor: pointer;
@@ -25,41 +33,112 @@
         li {
             color: #000000;
             font-size: 16px; /* Ajusta el tamaño de fuente según sea necesario */
-            margin-bottom: 8px; /* Espaciado entre elementos de la lista */
+            padding-top: 5px;
+            padding-bottom: 5px;
+            padding-left: 10px;
+            padding-right: 10px;
+            width: auto;
         }
         .team-item {
             cursor: pointer;
         }
 
+        .members-section {
+            background-color: aliceblue;
+            border-radius: 5px;
+            width: 450px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            
+        }
+        .member-container{
+            
+            font-weight: bold;
+            font-size: 16px;
+            color: #000000;
+            display: flex;
+            
+            height: 30px;
+            width: 200px;
+            background-color: aliceblue;
+            border: 1px solid #000000;
+            justify-content: space-between;
+            /* Le damos un padding para separar el texto de los bordes */
+            padding-left: 10px;
+            padding-right: 10px;
+            text-align: left;
+            
+            /* Le damos efecto redondeado */
+            border-radius: 10px;
+        }
+        .member-container a{
+            color: #000000;
+            text-decoration: none;
+        }
+        .member-container a:hover{
+            text-decoration: none;
+            
+        }
+
+        .member-container:hover{
+            /* Agregamos sombreado */
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+
+            
+        }
+        .members-list{
+            list-style-type: none;
+            padding: 0;
+            background-color: aliceblue;
+            border-radius: 5px;
+            width: auto;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .project-content {
+            display: flex;
+            justify-content: space-between;
+        }
+                .tarea {
+            display: flex;
+        }
+
+        .columna-izquierda {
+            flex: 1;
+            padding: 20px;
+            background-color: #F8AD9D;
+        }
+
+        .col-md-6 {
+            flex: 1;
+            padding: 20px;
+        }
     </style>
 </head>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <div class="container">
-    <div class="row">
-        <div class="col-md-12">
+
+    <div class="info-proyecto">
             <h1 style="color: #B07052;">{{project._nombreProyecto}}</h1>
-        </div>
+            <h2 style="color: #F8AD9D;">{{project._descripcionProyecto}}</h2>
     </div>
 
-    <div class="row">
-        <div class="col-md-6">
-            <h2 style="color: #F8AD9D;">{{project._descripcionProyecto}}</h2>
+<div class="project-content">
 
-            <h2 style="color: #B07052;">Miembros</h2>
+
+    <div class="members-section">
+         <h2 style="color: #B07052;">Miembros</h2>
 
             <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="#F8AD9D" class="bi bi-person-add" viewBox="0 0 16 16" data-toggle="modal" data-target="#addMemberModal">
             <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
             <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
             </svg>
 
-            
-            
-          
                 
-            <ul>
+            <ul class = "members-list">
                 {{#each members}}
                 <li>
-                    {{this}}
+                    <div class="member-container"> <a href="#">{{this}}</a>
 
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#B07052"
                         class="bi bi-person-dash" viewBox="0 0 16 16" onclick="deleteMember('{{this}}')" >
@@ -68,7 +147,7 @@
                         <path
                             d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1z" />
                     </svg>
-                    
+                    </div>
                 </li>
                 {{/each}}
             </ul>
@@ -112,10 +191,10 @@
                                 style="background-color: #B07052;">Save changes</button>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <h2 style="color: #B07052;">Equipos</h2>
+    </div>
+           
+    <div class="teams-section">
+        <h2 style="color: #B07052;">Equipos</h2>
             
             <svg xmlns="http://www.w3.org/2000/svg" width="40 " height="40" fill="#F8AD9D" 
             class="bi bi-people" viewBox="0 0 16 16" data-toggle="modal" data-target="#addTeamModal">
@@ -216,6 +295,9 @@
                 </div>
             </div>
         </div>
+        
+    </div>
+            
 
         <div class="col-md-6 order-md-2">
             <h2 style="color: #B07052;">Tareas</h2>
@@ -228,7 +310,7 @@
 </svg> 
             <ul>
                 {{#each tasks}}
-                <li style="color: #000000;">{{this.nombreTarea}}</li>
+                <li style="color: #000000;"> <div class="task-container"> {{this.nombreTarea}} </div> </li>
                 {{/each}}
             </ul>
 
@@ -276,6 +358,7 @@
             </div>
         </div>
     </div>
+    </div>
     <h1 style="color: #B07052;">Cambios este mes: </h1>
     <ul>
         {{#each changes}}
@@ -286,22 +369,6 @@
 
 </div>
 
-    <style> 
-        .tarea {
-            display: flex;
-        }
-
-        .columna-izquierda {
-            flex: 1;
-            padding: 20px;
-            background-color: #F8AD9D;
-        }
-
-        .col-md-6 {
-            flex: 1;
-            padding: 20px;
-        }
-    </style>
 
 <script>
 

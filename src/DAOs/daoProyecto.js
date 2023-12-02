@@ -1,4 +1,4 @@
-const { connectDB } = require('../../db');
+const { connectDB, disconnectDB } = require('../../db');
 const bcrypt = require('bcrypt');
 const Proyecto = require('../models/proyecto');
 const tarea = require('../models/tarea');
@@ -6,114 +6,201 @@ const Team = require('../models/team');
 
 class ProjectDao {
     static async createProject(project) {
-        if (project) {
-            try {
-                const connection = await connectDB();
-                let query =
-                    'INSERT INTO Proyectos (nombreProyecto, idCreador, cantidadMiembros, fechaCreacion, descripcionProyecto, fechaUltModificacion) VALUES (?, ?, ?, ?, ?, ?)';
-                const valores = [
-                    project.nombreProyecto,
-                    project.idCreador,
-                    project.cantidadMiembros,
-                    project.fechaCreacion,
-                    project.descripcionProyecto,
-                    project.fechaUltModificacion,
-                ];
-                const result = await connection.execute(query, valores);
-                // Obtenemos el ID del proyecto recién creado por medio de la consulta que te da el ultimo  ID
-                query = 'SELECT LAST_INSERT_ID()';
-                
-                const [rows] = await connection.execute(query);
-                let id = rows[0]['LAST_INSERT_ID()'];
-                
-                await ProjectDao.addMember(id, project.idCreador, 'project-owner');
+        let connection;
+        try {
+            connection = await connectDB();
 
-                console.log('[+] Project successfully created.');
-                return result;
-            } catch (error) {
-                console.error('[-] Error al insertar un proyecto', error);
-                return null;
+            // Inicia la transacción
+            await connection.beginTransaction();
+
+            let query =
+                'INSERT INTO Proyectos (nombreProyecto, idCreador, cantidadMiembros, fechaCreacion, descripcionProyecto, fechaUltModificacion) VALUES (?, ?, ?, ?, ?, ?)';
+            const valores = [
+                project.nombreProyecto,
+                project.idCreador,
+                project.cantidadMiembros,
+                project.fechaCreacion,
+                project.descripcionProyecto,
+                project.fechaUltModificacion,
+            ];
+            const result = await connection.execute(query, valores);
+
+            // Obtenemos el ID del proyecto recién creado por medio de la consulta que te da el último ID
+            query = 'SELECT LAST_INSERT_ID()';
+            const [rows] = await connection.execute(query);
+            let id = rows[0]['LAST_INSERT_ID()'];
+
+            // Ahora puedes realizar otras operaciones en la misma transacción, por ejemplo, agregar miembros
+            await ProjectDao.addMember(connection, id, project.idCreador, 'project-owner');
+
+            // Commit de la transacción
+            await connection.commit();
+
+            console.log('[+] Project successfully created.');
+            return result;
+        } catch (error) {
+            // Si hay un error, realiza un rollback para deshacer todas las operaciones
+            if (connection) {
+                await connection.rollback();
             }
-        } else {
-            console.error('[-] The project object is undefined or null.');
+            console.error('[-] Error al insertar un proyecto', error);
             return null;
+        } finally {
+            if (connection) {
+                // Independientemente de si hay éxito o error, libera la conexión al pool
+                await disconnectDB(connection);
+            }
         }
     }
 
     static async addTask(idProyecto, tarea) {
-        if (tarea) {
-            try {
-                const connection = await connectDB();
-                console.log(tarea)
-                let query =
-                    'INSERT INTO Tareas (idProyecto, nombreTarea, descripcionTarea, fechaEntrega, fechaCreacion) VALUES (?, ?, ?, ?, ?)';
-                const valores = [
-                    idProyecto,
-                    tarea.nombreTarea,
-                    tarea.descripcionTarea,
-                    tarea.fechaEntrega,
-                    tarea.fechaCreacion,
-                ];
-                const result = await connection.execute(query, valores);
-                console.log('[+] Task successfully added.');
-                return result;
-            } catch (error) {
-                console.error('[-] Error al insertar una tarea', error);
-                return null;
+        let connection;
+        try {
+            connection = await connectDB();
+
+            // Inicia la transacción
+            await connection.beginTransaction();
+
+            let query =
+                'INSERT INTO Tareas (idProyecto, nombreTarea, descripcionTarea, fechaEntrega, fechaCreacion) VALUES (?, ?, ?, ?, ?)';
+            const valores = [
+                idProyecto,
+                tarea.nombreTarea,
+                tarea.descripcionTarea,
+                tarea.fechaEntrega,
+                tarea.fechaCreacion,
+            ];
+            const result = await connection.execute(query, valores);
+
+            // Commit de la transacción
+            await connection.commit();
+
+            console.log('[+] Task successfully added.');
+            return result;
+        } catch (error) {
+            // Si hay un error, realiza un rollback para deshacer todas las operaciones
+            if (connection) {
+                await connection.rollback();
             }
-        } else {
-            console.error('[-] The task object is undefined or null.');
+            console.error('[-] Error al insertar una tarea', error);
             return null;
+        } finally {
+            if (connection) {
+                // Independientemente de si hay éxito o error, libera la conexión al pool
+                await disconnectDB(connection);
+            }
         }
     }
     
     static async addMember(idProyecto, idUsuario, rol) {
         const connection = await connectDB();
-        const query = 'INSERT INTO Usuario_Proyecto (idUsuario, idProyecto, fechaIngreso, rol) VALUES (?, ?,?,?)';
-        const valores = [idUsuario, idProyecto, new Date(), rol];
-        const result = await connection.execute(query, valores);
-        console.log('[+] Member successfully added.');
-        return result;
+        let transaction;
+    
+        try {
+            // Iniciar la transacción
+            transaction = await connection.beginTransaction();
+    
+            const query = 'INSERT INTO Usuario_Proyecto (idUsuario, idProyecto, fechaIngreso, rol) VALUES (?, ?,?,?)';
+            const valores = [idUsuario, idProyecto, new Date(), rol];
+            const result = await connection.execute(query, valores);
+    
+            // Confirmar la transacción
+            await connection.commit();
+    
+            console.log('[+] Member successfully added.');
+            return result;
+        } catch (error) {
+            // Si hay un error, revertir la transacción
+            if (transaction) {
+                await connection.rollback();
+            }
+    
+            console.error('[-] Error al añadir un miembro', error);
+            return null;
+        } finally {
+            // Asegurarse de liberar los recursos de la transacción
+            if (transaction) {
+                await transaction.release();
+            }
+        }
     }
     
     static async addTeam(idProyecto, team) {
         if (team) {
+            const connection = await connectDB();
+            let transaction;
+    
             try {
-                const connection = await connectDB();
-                let query = "INSERT INTO GrupoDeTrabajo (idProyecto, nombreGrupo, descripcionGrupo, fechaCreacion) VALUES (?, ?, ?,?)";
+                // Iniciar la transacción
+                transaction = await connection.beginTransaction();
+    
+                const query = "INSERT INTO GrupoDeTrabajo (idProyecto, nombreGrupo, descripcionGrupo, fechaCreacion) VALUES (?, ?, ?,?)";
                 const valores = [idProyecto, team.nombreGrupo, team.descripcionGrupo, team.fechaCreacion];
                 const result = await connection.execute(query, valores);
+    
+                // Confirmar la transacción
+                await connection.commit();
+    
                 console.log('[+] Team successfully added.');
                 return result;
             } catch (error) {
-                console.error('[-] Error al insertar un equipo', error);
+                // Si hay un error, revertir la transacción
+                if (transaction) {
+                    await connection.rollback();
+                }
+    
+                console.error('[-] Error al añadir un equipo', error);
                 return null;
+            } finally {
+                // Asegurarse de liberar los recursos de la transacción
+                if (transaction) {
+                    await transaction.release();
+                }
             }
         } else {
             console.error('[-] The team object is undefined or null.');
             return null;
         }
-
     }
-
-    static async editTeam(teamId,team) {
+    
+    static async editTeam(teamId, team) {
         if (team) {
+            const connection = await connectDB();
+            let transaction;
+    
             try {
-                const connection = await connectDB();
-                let query = "UPDATE GrupoDeTrabajo SET nombreGrupo = ?, descripcionGrupo = ? WHERE idGrupo = ?";
+                // Iniciar la transacción
+                transaction = await connection.beginTransaction();
+    
+                const query = "UPDATE GrupoDeTrabajo SET nombreGrupo = ?, descripcionGrupo = ? WHERE idGrupo = ?";
                 const valores = [team.nombreGrupo, team.descripcionGrupo, teamId];
                 const result = await connection.execute(query, valores);
+    
+                // Confirmar la transacción
+                await connection.commit();
+    
                 console.log('[+] Team successfully edited.');
                 return result;
             } catch (error) {
+                // Si hay un error, revertir la transacción
+                if (transaction) {
+                    await connection.rollback();
+                }
+    
                 console.error('[-] Error al editar un equipo', error);
                 return null;
+            } finally {
+                // Asegurarse de liberar los recursos de la transacción
+                if (transaction) {
+                    await transaction.release();
+                }
             }
         } else {
             console.error('[-] The team object is undefined or null.');
             return null;
         }
     }
+    
 
     static async getProjectID(idUsuario, nombreProyecto) {
         //Obtenemos todos los proyectos del usuario
@@ -149,81 +236,155 @@ class ProjectDao {
         [project.nombreProyecto, project.idCreador, project.cantidadMiembros, project.fechaCreacion, project.descripcionProyecto, project.fechaUltModificacion, project.getID()]);
     }
 
-    static async delete(id) {
-        const connection = await connectDB();
-        await connection.execute('DELETE FROM Proyectos WHERE idProyecto = ?', [id]);
+    static async delete(connection, id) {
+        try {
+            await connection.execute('DELETE FROM Proyectos WHERE idProyecto = ?', [id]);
+        } catch (error) {
+            console.error('[-] Error al eliminar un proyecto', error);
+            throw error; // Re-lanzar el error para que la transacción lo maneje
+        }
     }
 
     static async getAllProjects() {
-        const connection = await connectDB();
-        const [rows] = await connection.execute('SELECT * FROM Proyectos');
-        return rows.map((project) => new Proyecto(project.idCreador, project.nombreProyecto, project.cantidadMiembros, project.fechaCreacion, project.descripcionProyecto, project.fechaUltModificacion));
+        let connection;
+        try {
+            connection = await connectDB();
+            const [rows] = await connection.execute('SELECT * FROM Proyectos');
+            const projects = rows.map((project) => new Proyecto(project.idCreador, project.nombreProyecto, project.cantidadMiembros, project.fechaCreacion, project.descripcionProyecto, project.fechaUltModificacion));
+            return projects;
+        } catch (error) {
+            console.error('[-] Error al obtener todos los proyectos', error);
+            throw error;
+        } finally {
+            await disconnectDB(connection);
+        }
     }
+    
 
     static async getProjectMembers(id) {
-        const connection = await connectDB();
-        const [rows] = await connection.execute('SELECT idUsuario FROM Usuario_Proyecto WHERE idProyecto = ?', [id]);
-        const data = rows;
-        let members = [];
-        for (let i = 0; i < data.length; i++) {
-            const [rows] = await connection.execute('SELECT username FROM Usuarios WHERE idUsuario = ?', [data[i].idUsuario]);
-            let data2 = rows[0];
-            members.push(data2.username);
+        let connection;
+        try {
+            connection = await connectDB();
+            const [rows] = await connection.execute('SELECT idUsuario FROM Usuario_Proyecto WHERE idProyecto = ?', [id]);
+            const data = rows;
+            let members = [];
+    
+            for (let i = 0; i < data.length; i++) {
+                const [userRows] = await connection.execute('SELECT username FROM Usuarios WHERE idUsuario = ?', [data[i].idUsuario]);
+                let data2 = userRows[0];
+                members.push(data2.username);
+            }
+    
+            return members;
+        } catch (error) {
+            console.error('[-] Error al obtener los miembros del proyecto', error);
+            throw error;
+        } finally {
+            await disconnectDB(connection);
         }
-        
-        return members;
     }
+    
 
-    static async deleteMember(idProyecto, idUsuario) {
-        const connection = await connectDB();
-        await connection.execute('DELETE FROM Usuario_Proyecto WHERE idProyecto = ? AND idUsuario = ?', [idProyecto, idUsuario]);
+    static async deleteMember(connection, idProyecto, idUsuario) {
+        try {
+            await connection.beginTransaction();
+    
+            await connection.execute('DELETE FROM Usuario_Proyecto WHERE idProyecto = ? AND idUsuario = ?', [idProyecto, idUsuario]);
+    
+            await connection.commit();
+            console.log('[+] Member successfully deleted.');
+        } catch (error) {
+            console.error('[-] Error al eliminar un miembro', error);
+            await connection.rollback(); // Revertir la transacción en caso de error
+            throw error; // Re-lanzar el error para que se maneje fuera de la función
+        } finally {
+            await disconnectDB(connection);
+        }
     }
+    
 
     static async getProjectTasks(id) {
         const connection = await connectDB();
-        const [rows] = await connection.execute('SELECT idTarea FROM Tareas WHERE idProyecto = ?', [id]);
-        const data = rows;
         let tasks = [];
-        for (let i = 0; i < data.length; i++) {
-            const [rows] = await connection.execute('SELECT * FROM Tareas WHERE idTarea = ?', [data[i].idTarea]);
-            let data2 = rows[0];
-            tasks.push(data2);
+    
+        try {
+            await connection.beginTransaction();
+    
+            const [rows] = await connection.execute('SELECT idTarea FROM Tareas WHERE idProyecto = ?', [id]);
+            const data = rows;
+    
+            for (let i = 0; i < data.length; i++) {
+                const [rows] = await connection.execute('SELECT * FROM Tareas WHERE idTarea = ?', [data[i].idTarea]);
+                let data2 = rows[0];
+                tasks.push(data2);
+            }
+    
+            await connection.commit();
+            return tasks;
+        } catch (error) {
+            console.error('[-] Error al obtener tareas del proyecto', error);
+            await connection.rollback(); // Revertir la transacción en caso de error
+            throw error; // Re-lanzar el error para que se maneje fuera de la función
+        } finally {
+            await disconnectDB(connection);
         }
-        return tasks;
     }
+    
 
     static async getProyectTeams(id) {
         const connection = await connectDB();
-        const [rows] = await connection.execute('SELECT idGrupo FROM GrupoDeTrabajo WHERE idProyecto = ?', [id]);
-        const data = rows;
-        
         let teams = [];
-        for (let i = 0; i < data.length; i++) {
-            
-            const [rows] = await connection.execute('SELECT * FROM GrupoDeTrabajo WHERE idGrupo = ?', [data[i].idGrupo]);
-            let data2 = rows[0];
-            console.log(data2)
-            teams.push(new Team(id, data2.nombreGrupo, data2.descripcionGrupo,data2.fechaCreacion));
+    
+        try {
+            await connection.beginTransaction();
+    
+            const [rows] = await connection.execute('SELECT idGrupo FROM GrupoDeTrabajo WHERE idProyecto = ?', [id]);
+            const data = rows;
+    
+            for (let i = 0; i < data.length; i++) {
+                const [rows] = await connection.execute('SELECT * FROM GrupoDeTrabajo WHERE idGrupo = ?', [data[i].idGrupo]);
+                let data2 = rows[0];
+                console.log(data2);
+                teams.push(new Team(id, data2.nombreGrupo, data2.descripcionGrupo, data2.fechaCreacion));
+            }
+    
+            await connection.commit();
+            return teams;
+        } catch (error) {
+            console.error('[-] Error al obtener equipos del proyecto', error);
+            await connection.rollback(); // Revertir la transacción en caso de error
+            throw error; // Re-lanzar el error para que se maneje fuera de la función
+        } finally {
+            await disconnectDB(connection);
         }
-        return teams;
-                
+    }
+    
+    static async saveProjectChanges(connection, id, cambios) {
+        try {
+            const query = 'INSERT INTO Registro_Mensual (idProyecto, cambio, fechaCambio) VALUES (?, ?, ?)';
+            const valores = [id, cambios, new Date()];
+            const result = await connection.execute(query, valores);
+            console.log('[+] Changes successfully saved.');
+            return result;
+        } catch (error) {
+            console.error('[-] Error al guardar cambios del proyecto', error);
+            throw error; // Re-lanzar el error para que la transacción lo maneje
+        }
     }
 
-    static async saveProjectChanges(id, cambios){
+    static async getProjectChangesSince(id, fecha) {
         const connection = await connectDB();
-        const query = 'INSERT INTO Registro_Mensual (idProyecto, cambio, fechaCambio) VALUES (?, ?, ?)';
-        const valores = [id, cambios, new Date()];
-        const result = await connection.execute(query, valores);
-        console.log('[+] Changes successfully saved.');
-        return result;
-    }
-
-    static async getProjectChangesSince(id, fecha){
-        const connection = await connectDB();
-        const query = 'SELECT * FROM Registro_Mensual WHERE idProyecto = ? AND fechaCambio > ?';
-        const valores = [id, fecha];
-        const [rows] = await connection.execute(query, valores);
-        return rows;
+        try {
+            const query = 'SELECT * FROM Registro_Mensual WHERE idProyecto = ? AND fechaCambio > ?';
+            const valores = [id, fecha];
+            const [rows] = await connection.execute(query, valores);
+            return rows;
+        } catch (error) {
+            console.error('[-] Error al obtener cambios del proyecto', error);
+            throw error; // Re-lanzar el error para que la transacción lo maneje
+        } finally {
+            await disconnectDB(connection);
+        }
     }
 }
 
