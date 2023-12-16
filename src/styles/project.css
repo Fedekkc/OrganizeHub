@@ -1,0 +1,101 @@
+.container {
+    font-family: 'Buenard', sans-serif;
+    display: flex;
+    flex-direction: column;
+    padding-top: 50px; /* Ajusta este valor según el alto de tu barra .info-proyecto */
+}
+
+
+
+svg {
+    /* Establecemos el pointer*/
+    cursor: pointer;
+}
+ul {
+list-style-type: none;
+padding: 0;
+}
+
+li {
+    color: #000000;
+    font-size: 16px; /* Ajusta el tamaño de fuente según sea necesario */
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: auto;
+}
+.team-item {
+    cursor: pointer;
+}
+
+.members-section {
+    background-color: aliceblue;
+    border-radius: 5px;
+    width: 450px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    
+}
+.member-container{
+    
+    font-weight: bold;
+    font-size: 16px;
+    color: #000000;
+    display: flex;
+    
+    height: 30px;
+    width: 200px;
+    background-color: aliceblue;
+    border: 1px solid #000000;
+    justify-content: space-between;
+    /* Le damos un padding para separar el texto de los bordes */
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: left;
+    
+    /* Le damos efecto redondeado */
+    border-radius: 10px;
+}
+.member-container a{
+    color: #000000;
+    text-decoration: none;
+}
+.member-container a:hover{
+    text-decoration: none;
+    
+}
+
+.member-container:hover{
+    /* Agregamos sombreado */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+
+    
+}
+.members-list{
+    list-style-type: none;
+    padding: 0;
+    background-color: aliceblue;
+    border-radius: 5px;
+    width: auto;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.project-content {
+    display: flex;
+    justify-content: space-between;
+}
+        .tarea {
+    display: flex;
+}
+
+.columna-izquierda {
+    flex: 1;
+    padding: 20px;
+    background-color: #F8AD9D;
+}
+
+.col-md-6 {
+    flex: 1;
+    padding: 20px;
+}

@@ -62,6 +62,7 @@ async function loginUser(req, res) {
             res.redirect('/projects');
         } else {
             res.render('login', { error: '[-] Incorrect password' });
+            console.log(" password encriptada ingresada por el usuario: " + await bcrypt.hash(password, 10));
             console.log("[-] Incorrect password");
         }
     } catch (error) {

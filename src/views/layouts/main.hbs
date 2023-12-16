@@ -25,7 +25,16 @@
   <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
   <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
 </svg></a></li>
-          <!-- Añadimos un a href con un icono -->
+  <li id="notification-icon">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
+      <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6"/>
+    </svg>    
+    <div id="notification-menu" class="notification-menu">
+      <!-- Aquí irán las notificaciones -->
+        
+    </div>
+  </li>
+
           <li><a href="/projects"><svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="#B07052" class="bi bi-folder-fill" viewBox="0 0 16 16">
   <path d="M9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.825a2 2 0 0 1-1.991-1.819l-.637-7a1.99 1.99 0 0 1 .342-1.31L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3m-8.322.12C1.72 3.042 1.95 3 2.19 3h5.396l-.707-.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981z"/>
 </svg> </a></li>
@@ -41,6 +50,24 @@
 
   {{{body}}}
 
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const notificationIcon = document.getElementById('notification-icon');
+    const notificationMenu = document.getElementById('notification-menu');
+
+    notificationIcon.addEventListener('click', function () {
+      // Alternar la visibilidad del menú de notificaciones al hacer clic en el icono
+      notificationMenu.style.display = notificationMenu.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Cierra el menú de notificaciones si se hace clic fuera de él
+    document.addEventListener('click', function (event) {
+      if (!notificationIcon.contains(event.target) && !notificationMenu.contains(event.target)) {
+        notificationMenu.style.display = 'none';
+      }
+    });
+  });
+</script>
 </body>
 <style>
 
@@ -141,5 +168,35 @@ nav a:hover{
     
 }
 
+/* Agrega estos estilos al final de tu estilo CSS existente */
+#notification-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  z-index: 1000; /* Asegura que el menú esté sobre otros elementos */
+}
+
+#notification-menu a {
+  display: block;
+  padding: 8px;
+  text-decoration: none;
+  color: #333;
+}
+
+#notification-menu a:hover {
+  background-color: #f0f0f0;
+}
+
+
 </style>
+
+
+
+
 </html>

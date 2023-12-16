@@ -13,6 +13,8 @@ class ProjectDao {
             // Inicia la transacción
             await connection.beginTransaction();
 
+            console.log('[+] Creating project...');
+
             let query =
                 'INSERT INTO Proyectos (nombreProyecto, idCreador, cantidadMiembros, fechaCreacion, descripcionProyecto, fechaUltModificacion) VALUES (?, ?, ?, ?, ?, ?)';
             const valores = [
@@ -25,14 +27,16 @@ class ProjectDao {
             ];
             const result = await connection.execute(query, valores);
 
+           
+
             // Obtenemos el ID del proyecto recién creado por medio de la consulta que te da el último ID
             query = 'SELECT LAST_INSERT_ID()';
             const [rows] = await connection.execute(query);
             let id = rows[0]['LAST_INSERT_ID()'];
 
             // Ahora puedes realizar otras operaciones en la misma transacción, por ejemplo, agregar miembros
-            await ProjectDao.addMember(connection, id, project.idCreador, 'project-owner');
-
+            await ProjectDao.addMember(id, project.idCreador, 'project-owner', connection);
+            console.log('[+] Project owner successfully added.');
             // Commit de la transacción
             await connection.commit();
 
@@ -53,10 +57,10 @@ class ProjectDao {
         }
     }
 
-    static async addTask(idProyecto, tarea) {
-        let connection;
+    static async addTask(idProyecto, tarea, connection = null) {
+        connection = connection || await connectDB();
         try {
-            connection = await connectDB();
+            
 
             // Inicia la transacción
             await connection.beginTransaction();
@@ -92,19 +96,22 @@ class ProjectDao {
         }
     }
     
-    static async addMember(idProyecto, idUsuario, rol) {
-        const connection = await connectDB();
+    static async addMember(idProyecto, idUsuario, rol, connection = null) {
+        connection = connection || await connectDB();
         let transaction;
-    
         try {
             // Iniciar la transacción
+            console.log('[+] Starting transaction...');
             transaction = await connection.beginTransaction();
-    
+            
             const query = 'INSERT INTO Usuario_Proyecto (idUsuario, idProyecto, fechaIngreso, rol) VALUES (?, ?,?,?)';
             const valores = [idUsuario, idProyecto, new Date(), rol];
+
+            console.log('[+] Adding member...');
             const result = await connection.execute(query, valores);
     
             // Confirmar la transacción
+            console.log('[+] Committing transaction...');
             await connection.commit();
     
             console.log('[+] Member successfully added.');
@@ -112,22 +119,18 @@ class ProjectDao {
         } catch (error) {
             // Si hay un error, revertir la transacción
             if (transaction) {
+                console.log('[-] Rolling back transaction...');
                 await connection.rollback();
             }
     
             console.error('[-] Error al añadir un miembro', error);
             return null;
-        } finally {
-            // Asegurarse de liberar los recursos de la transacción
-            if (transaction) {
-                await transaction.release();
-            }
-        }
+        } 
     }
     
-    static async addTeam(idProyecto, team) {
+    static async addTeam(idProyecto, team, connection = null) {
         if (team) {
-            const connection = await connectDB();
+            connection = connection || await connectDB();
             let transaction;
     
             try {
@@ -151,21 +154,17 @@ class ProjectDao {
     
                 console.error('[-] Error al añadir un equipo', error);
                 return null;
-            } finally {
-                // Asegurarse de liberar los recursos de la transacción
-                if (transaction) {
-                    await transaction.release();
-                }
-            }
+            } 
         } else {
             console.error('[-] The team object is undefined or null.');
             return null;
         }
     }
     
-    static async editTeam(teamId, team) {
+    static async editTeam(teamId, team, connection = null) {
         if (team) {
-            const connection = await connectDB();
+            connection = connection || await connectDB();
+
             let transaction;
     
             try {
@@ -189,12 +188,7 @@ class ProjectDao {
     
                 console.error('[-] Error al editar un equipo', error);
                 return null;
-            } finally {
-                // Asegurarse de liberar los recursos de la transacción
-                if (transaction) {
-                    await transaction.release();
-                }
-            }
+            } 
         } else {
             console.error('[-] The team object is undefined or null.');
             return null;
@@ -202,9 +196,9 @@ class ProjectDao {
     }
     
 
-    static async getProjectID(idUsuario, nombreProyecto) {
+    static async getProjectID(idUsuario, nombreProyecto, connection = null) {
         //Obtenemos todos los proyectos del usuario
-        const connection = await connectDB();
+        connection = connection || await connectDB();
         const query = 'SELECT idProyecto FROM Usuario_Proyecto WHERE idUsuario = ?';
         const [rows] = await connection.execute(query, [idUsuario]);
         let data = rows;
@@ -222,21 +216,23 @@ class ProjectDao {
         return id;
     }
 
-    static async findByID(id) {
-        const connection = await connectDB();
+    static async findByID(id, connection = null) {
+        connection = connection || await connectDB();
+
         const [rows] = await connection.execute('SELECT * FROM Proyectos WHERE idProyecto = ?', [id]);
         const data = rows[0];
         
         return new Proyecto(data.idCreador, data.nombreProyecto, data.cantidadMiembros, data.fechaCreacion, data.descripcionProyecto, data.fechaUltModificacion);
     }
 
-    static async update(project) {
-        const connection = await connectDB();
+    static async update(project, connection = null) {
+        connection = connection || await connectDB();
         await connection.execute('UPDATE Proyectos SET nombreProyecto = ?, idCreador = ?, cantidadMiembros = ?, fechaCreacion = ?, descripcionProyecto = ?, fechaUltModificacion = ? WHERE idProyecto = ?',
         [project.nombreProyecto, project.idCreador, project.cantidadMiembros, project.fechaCreacion, project.descripcionProyecto, project.fechaUltModificacion, project.getID()]);
     }
 
-    static async delete(connection, id) {
+    static async delete(id, connection = null) {
+        connection = connection || await connectDB();
         try {
             await connection.execute('DELETE FROM Proyectos WHERE idProyecto = ?', [id]);
         } catch (error) {
@@ -245,8 +241,8 @@ class ProjectDao {
         }
     }
 
-    static async getAllProjects() {
-        let connection;
+    static async getAllProjects(connection = null) {
+        connection = connection || await connectDB();
         try {
             connection = await connectDB();
             const [rows] = await connection.execute('SELECT * FROM Proyectos');
@@ -261,8 +257,8 @@ class ProjectDao {
     }
     
 
-    static async getProjectMembers(id) {
-        let connection;
+    static async getProjectMembers(id, connection = null) {
+        connection = connection || await connectDB();
         try {
             connection = await connectDB();
             const [rows] = await connection.execute('SELECT idUsuario FROM Usuario_Proyecto WHERE idProyecto = ?', [id]);
@@ -285,8 +281,9 @@ class ProjectDao {
     }
     
 
-    static async deleteMember(connection, idProyecto, idUsuario) {
+    static async deleteMember(idProyecto, idUsuario, connection = null) {
         try {
+            connection = connection || await connectDB();
             await connection.beginTransaction();
     
             await connection.execute('DELETE FROM Usuario_Proyecto WHERE idProyecto = ? AND idUsuario = ?', [idProyecto, idUsuario]);
@@ -303,8 +300,9 @@ class ProjectDao {
     }
     
 
-    static async getProjectTasks(id) {
-        const connection = await connectDB();
+    static async getProjectTasks(id, connection = null) {
+        connection = connection || await connectDB();
+
         let tasks = [];
     
         try {
@@ -331,8 +329,8 @@ class ProjectDao {
     }
     
 
-    static async getProyectTeams(id) {
-        const connection = await connectDB();
+    static async getProyectTeams(id, connection = null) {
+        connection = connection || await connectDB();
         let teams = [];
     
         try {
@@ -359,8 +357,9 @@ class ProjectDao {
         }
     }
     
-    static async saveProjectChanges(connection, id, cambios) {
+    static async saveProjectChanges(id, cambios, connection = null) {
         try {
+            connection = connection || await connectDB();
             const query = 'INSERT INTO Registro_Mensual (idProyecto, cambio, fechaCambio) VALUES (?, ?, ?)';
             const valores = [id, cambios, new Date()];
             const result = await connection.execute(query, valores);
@@ -372,8 +371,8 @@ class ProjectDao {
         }
     }
 
-    static async getProjectChangesSince(id, fecha) {
-        const connection = await connectDB();
+    static async getProjectChangesSince(id, fecha, connection = null) {
+        connection = connection || await connectDB();
         try {
             const query = 'SELECT * FROM Registro_Mensual WHERE idProyecto = ? AND fechaCambio > ?';
             const valores = [id, fecha];

@@ -62,12 +62,14 @@ async function newProject(req, res) {
 
         //obtener el id del usuario actual con el DAO de usuarios
         console.log("[+] User: " + user);
+        
         const userID = await getUserID(user.username);
 
         const project = new Proyecto(userID, projectName, 1, new Date(), projectDescription, new Date());
         console.log("[+] Project: ");
         console.log(project);
         await ProjectDao.createProject(project);
+        console.log("ASDASDASD")
         
         //Añadimos el proyecto a la lista de proyectos del usuario (La funcion project.getID no existe)
         //Obtenemos el ID del proyecto recién creado por medio de la consulta que te da el ultimo  ID
@@ -83,7 +85,9 @@ async function newProject(req, res) {
         //Actualizamos el usuario en la sesion
         req.session.user = user;
         req.session.projects = user.projects; // Store projects in the session
+        console.log("Antes de redireccionar")
         res.redirect('/projects');
+        console.log("ASDASDASD")
     } catch (error) {
         console.error("[!] Error creating new project:", error);
         res.status(500).send("Error creating new project");

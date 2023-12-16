@@ -27,8 +27,7 @@ Handlebars.registerHelper('in', function(elem, list, options) {
 app.engine('hbs', engine({ extname: '.hbs', defaultLayout: 'main' }));
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
-app.use(express.static(path.join(__dirname, 'assets')));
-app.use(express.static(path.join(__dirname, 'src/styles')));
+app.use(express.static(path.join(__dirname, '/styles')));
 
 
 
@@ -54,13 +53,14 @@ app.use((req, res, next) => {
 
 
 
-
 const startApp = async () => {
     try {
         await connectDB();
         app.set('port', process.env.PORT || 3000);
         app.listen(app.get('port'), () => {
             console.log(`[+] Server succesfully started at port: ${app.get('port')}`);
+            console.log(__dirname + '/styles');
+
         });
     } catch (error) {
         console.error('Error al iniciar la aplicación:', error);
