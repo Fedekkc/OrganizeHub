@@ -18,7 +18,7 @@ async function projects(req, res) {
         const projectObject = Object.create(null);
         console.log("[+] Project: " + projects[project]);
         const projectData = await ProjectDao.findByID(projects[project]);
-        Object.assign(projectObject, projectData, { projectID: projects[project] }); // Add id property to projectObject
+        Object.assign(projectObject, projectData, { id: projects[project] }); // Add id property to projectObject
         
         projectsArray.push(projectObject);
     }
@@ -62,14 +62,12 @@ async function newProject(req, res) {
 
         //obtener el id del usuario actual con el DAO de usuarios
         console.log("[+] User: " + user);
-        
         const userID = await getUserID(user.username);
 
         const project = new Proyecto(userID, projectName, 1, new Date(), projectDescription, new Date());
         console.log("[+] Project: ");
         console.log(project);
         await ProjectDao.createProject(project);
-        console.log("ASDASDASD")
         
         //Añadimos el proyecto a la lista de proyectos del usuario (La funcion project.getID no existe)
         //Obtenemos el ID del proyecto recién creado por medio de la consulta que te da el ultimo  ID
@@ -85,9 +83,7 @@ async function newProject(req, res) {
         //Actualizamos el usuario en la sesion
         req.session.user = user;
         req.session.projects = user.projects; // Store projects in the session
-        console.log("Antes de redireccionar")
         res.redirect('/projects');
-        console.log("ASDASDASD")
     } catch (error) {
         console.error("[!] Error creating new project:", error);
         res.status(500).send("Error creating new project");
@@ -97,9 +93,7 @@ async function newProject(req, res) {
 // Funcion para renderizar la vista de un proyecto en la ruta /projects/:id
 
 async function getProject(req, res) {
-    const id = req.params.id; // devuelve el id del proyecto en la ruta /projects/:id
-    console.log("[+] Rendering project with id: " + id)
-    console.log(id);
+    const id = req.params.id;
     const project = await ProjectDao.findByID(id);
     const members = await ProjectDao.getProjectMembers(id);
     const tasks = await ProjectDao.getProjectTasks(id);
@@ -107,6 +101,7 @@ async function getProject(req, res) {
     const user = req.session.user || res.locals.user;
     const changes = await changesThisMonth(id);
     const users = await userDao.getAllUsers();    
+    
     
     res.render('projects/project', { project, members, tasks, teams, id, user, changes, users });
 }
@@ -208,6 +203,7 @@ async function editTeam(req, res) {
     await ProjectDao.saveProjectChanges(projectID, 'Team ' + teamName + ' edited at ' + new Date());
     res.redirect('/projects/' + projectID);
 }
+
 
 
 
