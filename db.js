@@ -10,24 +10,24 @@ const pool = mysql.createPool({
 
 const connectDB = async () => {
     try {
-        const connection = await pool.getConnection(); // Usar pool.getConnection() en lugar de createConnection()
+        const connection = await pool.getConnection();
         console.log('[+] Connected to MySQL successfully.');
-
         return connection;
     } catch (error) {
         console.error('Error connecting to MySQL', error);
-        process.exit(1);
+        throw error; // Re-lanzar el error para que se maneje en el lugar donde se llama a connectDB
     }
 };
 
+
 const disconnectDB = async (connection) => {
     try {
-        await connection.release(); // Usar release() en lugar de end() para liberar la conexión al pool
+        await connection.release();
         console.log('[+] Disconnected from MySQL successfully.');
     } catch (error) {
         console.error('Error disconnecting from MySQL', error);
-        process.exit(1);
     }
 }
+
 
 module.exports = { connectDB, disconnectDB };

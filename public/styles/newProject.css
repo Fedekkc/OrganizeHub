@@ -1,0 +1,57 @@
+body{
+    font-family: 'Buenard', serif;
+
+
+    text-align: center;
+  }
+  #projectName{
+    font-family: 'Buenard', serif;
+
+    border-radius: 7px;
+    text-align: center;
+    border: none;
+  }
+
+  #projectDescription{
+    font-family: 'Buenard', serif;
+
+    border-radius: 7px;
+    text-align: center;
+        border: none;
+
+  }
+
+
+
+
+  button {
+    font-family: 'Buenard', serif;
+    background-color: #F8AD9D;
+    padding-left: 60%;
+    color: #B07052;
+    border: none;
+    padding: 10px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  button:hover {
+    transform: scale(1.1);
+    transition: 0.5s;
+    background-color: #B07052; /* Invierte el color de fondo */
+    color: #F8AD9D; /* Invierte el color de la fuente */
+  }
+
+  .name-project{
+    padding: 1%;
+  }  
+
+  .desc-project{
+    align-content: center;
+    padding: 1%;
+  }

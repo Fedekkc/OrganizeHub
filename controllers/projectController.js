@@ -9,28 +9,37 @@ const { format } = require('date-fns');
 // Function to render the projects view
 
 async function projects(req, res) {
-    console.log("[+] Rendering projects");
     const projects = res.locals.projects || []; // Retrieve projects from the session
-        
-    let projectsArray = [];
     
-    for (project in projects) {
-        const projectObject = Object.create(null);
-        console.log("[+] Project: " + projects[project]);
-        const projectData = await ProjectDao.findByID(projects[project]);
-        Object.assign(projectObject, projectData, { id: projects[project] }); // Add id property to projectObject
-        
-        projectsArray.push(projectObject);
+    try {
+        const projectsArray = await Promise.all(projects.map(async (project) => {
+            console.log("[+] Project: " + project);
+            const projectData = await ProjectDao.findByID(project);
+            console.log(projectData);
+            return Object.assign({}, projectData, { id: project });
+        }));
+        console.log(projectsArray)
+        res.render('projects/projects', { projectsArray });
+        console.log("[+] Projects rendered");
+
+    } catch (error) {
+        console.error('Error in projects route:', error);
+        res.status(500).send('Internal Server Error');
     }
-    console.log(projectsArray);    
-    res.render('projects/projects', { projectsArray });
 }
 
+
 function newProjectView(req, res) {
-    console.log("[+] Rendering new project view");
-    req.session.user = req.session.user || res.locals.user; // set the user property in the session
-    req.session.projects = req.session.projects || []; 
-    res.render('projects/newProject');
+    try {
+        
+        req.session.user = req.session.user || res.locals.user; // set the user property in the session
+        req.session.projects = req.session.projects || []; 
+        res.render('projects/newProject');
+        console.log("[+] Rendering new project view");
+    } catch (error) {
+        console.error("[-] Error rendering new project view:", error);
+        res.status(500).send("Error rendering new project view");
+    }
 }
 
 
@@ -93,17 +102,23 @@ async function newProject(req, res) {
 // Funcion para renderizar la vista de un proyecto en la ruta /projects/:id
 
 async function getProject(req, res) {
-    const id = req.params.id;
-    const project = await ProjectDao.findByID(id);
-    const members = await ProjectDao.getProjectMembers(id);
-    const tasks = await ProjectDao.getProjectTasks(id);
-    const teams = await ProjectDao.getProyectTeams(id);
-    const user = req.session.user || res.locals.user;
-    const changes = await changesThisMonth(id);
-    const users = await userDao.getAllUsers();    
-    
-    
-    res.render('projects/project', { project, members, tasks, teams, id, user, changes, users });
+    try {
+        console.log("probando")
+        const { id } = req.params;
+        console.log("[+] Rendering project with id: " + id)
+        const project = await ProjectDao.findByID(id);
+        const members = await ProjectDao.getProjectMembers(id);
+        const tasks = await ProjectDao.getProjectTasks(id);
+        const teams = await ProjectDao.getProyectTeams(id);
+        const user = req.session.user || res.locals.user;
+        const changes = await changesThisMonth(id);
+        const users = await userDao.getAllUsers();    
+        
+        res.render('projects/project', { project, members, tasks, teams, id, user, changes, users });
+    } catch (error) {
+        console.error(`Error getting project with ID ${id}:`, error);
+        res.status(500).send('Internal Server Error');
+    }
 }
 
 
