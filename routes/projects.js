@@ -9,7 +9,8 @@ const projectController = require('../controllers/projectController');
 router.use(authMiddleware);
 
 
-// Utiliza la función showProjects sin invocarla ()
+
+router.get('/projects/:projectID', projectController.getProject);
 router.get('/projects', async (req, res) => {
     try {
         await projectController.projects(req, res);
@@ -22,7 +23,6 @@ router.get('/projects', async (req, res) => {
 router.post('/projects', projectController.newProjectRedirect);
 router.get('/newProject', projectController.newProjectView);
 router.post('/newProject', projectController.newProject);
-router.get('/projects/:id', projectController.getProject);
 router.post('/addMember', projectController.addMember);
 router.post('/deleteMember', projectController.deleteMember);
 router.post('/addTask', projectController.addTask);

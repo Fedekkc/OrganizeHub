@@ -27,7 +27,6 @@ Handlebars.registerHelper('in', function(elem, list, options) {
 app.engine('hbs', engine({ extname: '.hbs', defaultLayout: 'main' }));
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
-app.use(express.static(path.join(__dirname, '/styles')));
 
 
 
@@ -41,6 +40,8 @@ app.use(session({
     resave: true,
     saveUninitialized: true,
 }));
+
+app.use(express.static(path.join(__dirname, '/styles')));
 
 app.use((req, res, next) => {
     res.locals.userLoggedIn = req.session.userLoggedIn;
@@ -80,8 +81,11 @@ app.get('/', (req, res) => {
     });
 });
 // Rutas
+
 app.use('/', loginRoutes);
 app.use('/', projectRoutes);
+
+
 
 process.on('SIGINT', async () => {
     console.log('Cerrando la aplicación y la conexión a la base de datos...');

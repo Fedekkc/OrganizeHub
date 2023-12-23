@@ -97,18 +97,19 @@ async function newProject(req, res) {
 // Funcion para renderizar la vista de un proyecto en la ruta /projects/:id
 
 async function getProject(req, res) {
-    const id = req.params.id; // devuelve el id del proyecto en la ruta /projects/:id
-    console.log("[+] Rendering project with id: " + id)
-    console.log(id);
-    const project = await ProjectDao.findByID(id);
-    const members = await ProjectDao.getProjectMembers(id);
-    const tasks = await ProjectDao.getProjectTasks(id);
-    const teams = await ProjectDao.getProyectTeams(id);
+    // Obtenemos el ID del proyecto de la ruta
+    console.log(req.params)
+    const { projectID } = req.params;
+
+    const project = await ProjectDao.findByID(projectID);
+    const members = await ProjectDao.getProjectMembers(projectID);
+    const tasks = await ProjectDao.getProjectTasks(projectID);
+    const teams = await ProjectDao.getProyectTeams(projectID);
     const user = req.session.user || res.locals.user;
-    const changes = await changesThisMonth(id);
+    const changes = await changesThisMonth(projectID);
     const users = await userDao.getAllUsers();    
     
-    res.render('projects/project', { project, members, tasks, teams, id, user, changes, users });
+    res.render('projects/project', { project, members, tasks, teams, projectID, user, changes, users });
 }
 
 
