@@ -23,6 +23,7 @@ router.get('/projects', async (req, res) => {
 router.post('/projects', projectController.newProjectRedirect);
 router.get('/newProject', projectController.newProjectView);
 router.post('/newProject', projectController.newProject);
+router.get('/projects/:id', projectController.getProject); // :id es un parámetro que se puede acceder desde req.params.id
 router.post('/addMember', projectController.addMember);
 router.post('/deleteMember', projectController.deleteMember);
 router.post('/addTask', projectController.addTask);

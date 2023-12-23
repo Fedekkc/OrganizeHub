@@ -1,0 +1,77 @@
+body {
+    font-family: 'Buenard', sans-serif;
+    background-color: #FFDAB9;
+    color: #B07052;
+  }
+
+  /* Custom styles for the New Project button */
+  .btn-primary {
+    background-color: #F8AD9D;
+    border-color: #F8AD9D;
+  }
+  .btn-primary:hover {
+    background-color: #FBC4AB;
+    border-color: #FBC4AB;
+  }
+
+  /* Custom styles for the project cards */
+  .card {
+    border: none;
+    transition: transform 0.5s;
+    background-color: #F8AD9D;
+  }
+
+  .card:hover {
+    transform: scale(1.05);
+  }
+
+  /* Custom styles for the project titles */
+  .card-title {
+    color: #FFDAB9;
+  }
+
+  /* Custom styles for the project description */
+  .card-text {
+    color: #B07052;
+  }
+
+  /* Custom styles for the date */
+  .text-muted {
+    color: #F8AD9D;
+  }
+
+
+  .circle-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #B07052;
+    color: white;
+    font-size: 24px;
+    border: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .circle-btn:hover {
+    background-color: #F8AD9D;
+  }
+  .card-body.new {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:155px;
+    
+  }
+  img{
+    width: 1280px;
+    height: 720px;
+    
+    top: 0;
+    left: 0;
+    
+    
+  }

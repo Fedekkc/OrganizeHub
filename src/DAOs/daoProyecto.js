@@ -125,7 +125,12 @@ class ProjectDao {
     
             console.error('[-] Error al añadir un miembro', error);
             return null;
-        } 
+        } finally {
+            if (connection) {
+                // Independientemente de si hay éxito o error, libera la conexión al pool
+                await disconnectDB(connection);
+            }
+        }
     }
     
     static async addTeam(idProyecto, team, connection = null) {
@@ -154,7 +159,12 @@ class ProjectDao {
     
                 console.error('[-] Error al añadir un equipo', error);
                 return null;
-            } 
+            } finally {
+                if (connection) {
+                    // Independientemente de si hay éxito o error, libera la conexión al pool
+                    await disconnectDB(connection);
+                }
+            }
         } else {
             console.error('[-] The team object is undefined or null.');
             return null;
@@ -188,7 +198,12 @@ class ProjectDao {
     
                 console.error('[-] Error al editar un equipo', error);
                 return null;
-            } 
+            } finally {
+                if (connection) {
+                    // Independientemente de si hay éxito o error, libera la conexión al pool
+                    await disconnectDB(connection);
+                }
+            }
         } else {
             console.error('[-] The team object is undefined or null.');
             return null;
@@ -197,32 +212,48 @@ class ProjectDao {
     
 
     static async getProjectID(idUsuario, nombreProyecto, connection = null) {
-        //Obtenemos todos los proyectos del usuario
-        connection = connection || await connectDB();
-        const query = 'SELECT idProyecto FROM Usuario_Proyecto WHERE idUsuario = ?';
-        const [rows] = await connection.execute(query, [idUsuario]);
-        let data = rows;
-        let id = null;
-        //Buscamos todos los proyectos con el nombre que nos pasaron
-        for (let i = 0; i < data.length; i++) {
-            const query = 'SELECT nombreProyecto FROM Proyectos WHERE idProyecto = ?';
-            const [rows] = await connection.execute(query, [data[i].idProyecto]);
-            let data2 = rows[0];
-            //Si el nombre del proyecto es igual al que nos pasaron, obtenemos el id
-            if (data2.nombreProyecto == nombreProyecto) {
-                id = data[i].idProyecto;
+        try {
+            //Obtenemos todos los proyectos del usuario
+            connection = connection || await connectDB();
+            const query = 'SELECT idProyecto FROM Usuario_Proyecto WHERE idUsuario = ?';
+            const [rows] = await connection.execute(query, [idUsuario]);
+            let data = rows;
+            let id = null;
+            //Buscamos todos los proyectos con el nombre que nos pasaron
+            for (let i = 0; i < data.length; i++) {
+                const query = 'SELECT nombreProyecto FROM Proyectos WHERE idProyecto = ?';
+                const [rows] = await connection.execute(query, [data[i].idProyecto]);
+                let data2 = rows[0];
+                //Si el nombre del proyecto es igual al que nos pasaron, obtenemos el id
+                if (data2.nombreProyecto == nombreProyecto) {
+                    id = data[i].idProyecto;
+                }
+            }
+            return id;
+        } catch (error) {
+            console.error(`Error getting project ID for user ${idUsuario} and project ${nombreProyecto}:`, error);
+            throw error; // Re-throw the error so it can be caught and handled by the calling function
+        } finally {
+            if (connection) {
+                await disconnectDB(connection);
             }
         }
-        return id;
     }
 
     static async findByID(id, connection = null) {
-        connection = connection || await connectDB();
+        try {
+            connection = connection || await connectDB();
+            const [rows] = await connection.execute('SELECT * FROM Proyectos WHERE idProyecto = ?', [id]);
+            const data = rows[0];
+            return new Proyecto(data.idCreador, data.nombreProyecto, data.cantidadMiembros, data.fechaCreacion, data.descripcionProyecto, data.fechaUltModificacion);
+        } catch (error) {
+            console.error(`Error finding project with ID ${id}:`, error);
+            throw error; // Re-throw the error so it can be caught and handled by the calling function
+        }
+        finally {
+            await disconnectDB(connection);
+        }
 
-        const [rows] = await connection.execute('SELECT * FROM Proyectos WHERE idProyecto = ?', [id]);
-        const data = rows[0];
-        
-        return new Proyecto(data.idCreador, data.nombreProyecto, data.cantidadMiembros, data.fechaCreacion, data.descripcionProyecto, data.fechaUltModificacion);
     }
 
     static async update(project, connection = null) {
@@ -238,13 +269,17 @@ class ProjectDao {
         } catch (error) {
             console.error('[-] Error al eliminar un proyecto', error);
             throw error; // Re-lanzar el error para que la transacción lo maneje
+        } finally {
+            if (connection) {
+                // Independientemente de si hay éxito o error, libera la conexión al pool
+                await disconnectDB(connection);
+            }
         }
     }
 
     static async getAllProjects(connection = null) {
         connection = connection || await connectDB();
         try {
-            connection = await connectDB();
             const [rows] = await connection.execute('SELECT * FROM Proyectos');
             const projects = rows.map((project) => new Proyecto(project.idCreador, project.nombreProyecto, project.cantidadMiembros, project.fechaCreacion, project.descripcionProyecto, project.fechaUltModificacion));
             return projects;
@@ -342,7 +377,6 @@ class ProjectDao {
             for (let i = 0; i < data.length; i++) {
                 const [rows] = await connection.execute('SELECT * FROM GrupoDeTrabajo WHERE idGrupo = ?', [data[i].idGrupo]);
                 let data2 = rows[0];
-                console.log(data2);
                 teams.push(new Team(id, data2.nombreGrupo, data2.descripcionGrupo, data2.fechaCreacion));
             }
     

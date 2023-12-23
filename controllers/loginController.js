@@ -59,7 +59,7 @@ async function loginUser(req, res) {
             req.session.userLoggedIn = true;
 
             console.log("[+] loginUser(): User logged in");
-            res.redirect('/projects');
+            res.redirect('/');
         } else {
             res.render('login', { error: '[-] Incorrect password' });
             console.log(" password encriptada ingresada por el usuario: " + await bcrypt.hash(password, 10));
